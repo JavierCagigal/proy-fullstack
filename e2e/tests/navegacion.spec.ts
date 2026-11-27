@@ -1,12 +1,13 @@
 import { expect, test } from '@playwright/test'
+import { entrar } from './helpers'
+
+test.beforeEach(({ page }) => entrar(page, 'lucia@dawhub.dev'))
 
 test('la home conecta con la API y la BD', async ({ page }) => {
-  await page.goto('/')
   await expect(page.getByText('API ✅ · BD ✅')).toBeVisible()
 })
 
 test('navegar es SPA: cambia la URL sin recargar la página', async ({ page }) => {
-  await page.goto('/')
   await page.evaluate(() => ((window as any).sinRecarga = true))
 
   await page.getByRole('link', { name: 'Retos' }).click()

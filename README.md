@@ -24,7 +24,7 @@ npm run dev                          # API en :3000 + web en http://localhost:51
 Tests:
 
 ```bash
-npm test                             # unitarios (backend + frontend)
+npm test                             # unitarios (backend + frontend); los de la API usan la BD local
 npx playwright install chromium      # solo la primera vez
 npm run test:e2e                     # E2E (arranca la API y la web solos; la BD local tiene que estar en marcha)
 ```

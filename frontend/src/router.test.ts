@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { createRouter, match } from './router'
+import { createRouter, match, navigate } from './router'
 
 const el = (text: string) => Object.assign(document.createElement('p'), { textContent: text })
 
@@ -34,6 +34,22 @@ describe('createRouter', () => {
     await new Promise((r) => setTimeout(r))
     expect(location.pathname).toBe('/b')
     expect(outlet.textContent).toBe('B')
+  })
+
+  it('la guardia redirige sin dejar la ruta prohibida en el historial', async () => {
+    let logueado = false
+    const guard = (path: string) => (!logueado && path !== '/login' ? '/login' : null)
+    const router = createRouter({ '/': () => el('home'), '/login': () => el('login') }, () => el('404'), outlet, guard)
+
+    const antes = history.length
+    await router.navigate('/')
+    expect(location.pathname).toBe('/login')
+    expect(outlet.textContent).toBe('login')
+
+    logueado = true
+    await navigate('/')
+    expect(outlet.textContent).toBe('home')
+    expect(history.length).toBe(antes + 1)
   })
 
   it('muestra la página 404 si no hay ruta', async () => {
