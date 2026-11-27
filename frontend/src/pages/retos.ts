@@ -21,7 +21,7 @@ type Reto = Omit<RetoLista, '_count' | 'miEquipo'> & {
 
 /** El estado se lee por la forma: abierto relleno, próximo discontinuo, cerrado apagado. */
 export const sello = (e: Estado) => ({
-  abierto: '<span class="inline-flex items-center gap-1.5 rounded-full bg-ink px-2.5 py-1 text-xs font-bold text-white"><span class="size-1.5 rounded-full bg-mint"></span>Abierto</span>',
+  abierto: '<span class="inline-flex items-center rounded-full bg-ink px-2.5 py-1 text-xs font-bold text-white">Abierto</span>',
   proximo: `<span class="inline-flex items-center gap-1 rounded-full border border-dashed border-ink px-2.5 py-1 text-xs font-bold">${icono('reloj', 'size-3.5')}Próximo</span>`,
   cerrado: '<span class="inline-flex rounded-full bg-[#f1f2f5] px-2.5 py-1 text-xs font-bold text-muted">Cerrado</span>',
 })[e]

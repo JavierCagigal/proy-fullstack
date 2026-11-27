@@ -1,10 +1,9 @@
 import { api } from '../api'
 import { esc, html } from '../html'
-import { confirmado, icono } from '../ui'
+import { avatar, confirmado, icono } from '../ui'
 import { usuario, type Rol, type Usuario } from '../session'
 
 const ROLES: Rol[] = ['alumno', 'profesor', 'admin']
-const COLOR_ROL: Record<Rol, string> = { alumno: 'var(--color-sky)', profesor: 'var(--color-lemon)', admin: 'var(--color-tomato)' }
 
 // Gestión de roles. El frontend solo oculta; quien protege es el backend (403 si no eres admin).
 export async function adminUsuariosPage() {
@@ -26,7 +25,7 @@ export async function adminUsuariosPage() {
             ${usuarios.map((u) => `
               <tr class="border-t border-line">
                 <td class="px-6 py-3.5 font-semibold">
-                  <span class="flex items-center gap-3"><span aria-hidden="true" data-avatar="${u.id}" class="grid size-8 place-items-center rounded-full border-2 border-white font-display font-extrabold shadow-[0_0_0_1px_#d9dde3]" style="background:${COLOR_ROL[u.rol]}">${esc(u.nombre[0]?.toUpperCase())}</span>${esc(u.nombre)}</span>
+                  <span class="flex items-center gap-3">${avatar(u.nombre, 'size-8 text-sm')}${esc(u.nombre)}</span>
                 </td>
                 <td class="px-6 py-3.5 text-muted">${esc(u.email)}</td>
                 <td class="px-6 py-3.5">
@@ -64,7 +63,6 @@ export async function adminUsuariosPage() {
     try {
       await api(`/admin/usuarios/${u.id}`, { method: 'PATCH', body: JSON.stringify({ rol: select.value }) })
       u.rol = select.value as Rol
-      el.querySelector<HTMLElement>(`[data-avatar="${u.id}"]`)!.style.background = COLOR_ROL[u.rol]
       msg.className = 'font-medium text-ok'
       msg.textContent = `${u.nombre} ahora es ${u.rol}.`
     } catch (err) {

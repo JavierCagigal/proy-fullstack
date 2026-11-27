@@ -3,7 +3,7 @@ import { api } from '../api'
 import { esc, html } from '../html'
 import { markdown } from '../markdown'
 import { usuario } from '../session'
-import { confirmado, cuando, icono } from '../ui'
+import { confirmado, cuando, icono, pegatinaLibre } from '../ui'
 
 /** Página con cabecera, botón que despliega un formulario, lista y recarga tras cada acción. */
 async function paginaConFormulario(opts: {
@@ -172,6 +172,56 @@ export function ofertasPage() {
             ${profe || o.autor.id === u.id ? `<button data-accion="borrar" data-id="${o.id}" data-confirmar="¿Borrar?" class="btn btn-texto" aria-label="Borrar la oferta ${esc(o.titulo)}">${icono('borrar', 'size-4')}</button>` : ''}
           </div>
         </li>`).join('')}</ul>`
+    },
+  })
+}
+
+// ── Skills ─────────────────────────────────────────────────────────────────
+
+const CATEGORIAS = ['frontend', 'backend', 'bases de datos', 'devops', 'ia', 'diseño', 'herramientas']
+type Skill = { id: number; titulo: string; url: string; categoria: string; contenidoMd: string | null; visible: boolean; creadoEn: string; autor: { id: number; nombre: string } }
+
+const dominio = (url: string) => { try { return new URL(url).hostname.replace(/^www\./, '') } catch { return url } }
+
+export function skillsPage() {
+  const u = usuario()!
+  const profe = u.rol !== 'alumno'
+  return paginaConFormulario({
+    titulo: 'Skills',
+    sub: profe ? 'Los enlaces que la clase recomienda, por categoría. Los que proponen los alumnos esperan tu aprobación.' : 'Los enlaces que la clase recomienda, por categoría. Si propones uno, aparecerá cuando lo apruebe un profesor.',
+    boton: 'Proponer skill',
+    formulario:
+      campo('Título', 'name="titulo" required placeholder="roadmap.sh Backend"') +
+      campo('Enlace', 'name="url" type="url" required placeholder="https://"') +
+      `<label class="block font-semibold">Categoría<select name="categoria" class="campo">${CATEGORIAS.map((c) => `<option value="${c}">${c[0].toUpperCase() + c.slice(1)}</option>`).join('')}</select></label>` +
+      campo('Por qué lo recomiendas <span class="font-normal text-muted">(opcional)</span>', 'name="contenidoMd"'),
+    enviar: (d) => api('/skills', { method: 'POST', body: JSON.stringify(d) }),
+    acciones: {
+      aprobar: (id) => api(`/skills/${id}/aprobar`, { method: 'PATCH' }),
+      borrar: (id) => api(`/skills/${id}`, { method: 'DELETE' }),
+    },
+    cargar: async () => {
+      const skills = await api<Skill[]>('/skills')
+      if (!skills.length) return '<p class="panel p-6 text-muted">Todavía no hay skills. ¿Qué recomendarías?</p>'
+      const categorias = [...new Set([...CATEGORIAS, ...skills.map((s) => s.categoria)])].filter((c) => skills.some((s) => s.categoria === c))
+      return `<div class="space-y-6">${categorias.map((c) => `
+        <section class="panel p-6" aria-label="${esc(c)}">
+          ${pegatinaLibre(c[0].toUpperCase() + c.slice(1), 'px-3.5 py-2 text-base')}
+          <ul class="mt-4">${skills.filter((s) => s.categoria === c).map((s) => `
+            <li class="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-line py-3.5 first:border-0">
+              <div class="min-w-0 flex-1 basis-56">
+                <p class="flex flex-wrap items-center gap-2">
+                  <a href="${esc(s.url)}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 font-semibold hover:underline">${esc(s.titulo)}${icono('externo', 'size-4 text-muted')}</a>
+                  ${s.visible ? '' : '<span class="inline-flex rounded-full border border-dashed border-ink px-2 py-0.5 text-xs font-bold">Pendiente de aprobar</span>'}
+                </p>
+                <p class="mt-0.5 text-sm text-muted">${esc(dominio(s.url))} · ${s.contenidoMd ? `${esc(s.contenidoMd)} · ` : ''}lo recomienda ${esc(s.autor.nombre)} ${cuando(s.creadoEn)}</p>
+              </div>
+              <div class="flex shrink-0 items-center gap-2">
+                ${profe && !s.visible ? `<button data-accion="aprobar" data-id="${s.id}" class="btn btn-primario px-3 py-2 text-sm">${icono('check', 'size-4')}Aprobar</button>` : ''}
+                ${profe || s.autor.id === u.id ? `<button data-accion="borrar" data-id="${s.id}" data-confirmar="¿Borrar?" class="btn btn-texto" aria-label="Borrar ${esc(s.titulo)}">${icono('borrar', 'size-4')}</button>` : ''}
+              </div>
+            </li>`).join('')}</ul>
+        </section>`).join('')}</div>`
     },
   })
 }

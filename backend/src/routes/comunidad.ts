@@ -6,7 +6,7 @@ import { EstadoPropuesta, TipoOferta } from '../generated/prisma/enums.js'
 import { esDuplicado, esUrl, idDe, texto } from '../validar.js'
 
 export const comunidadRouter = Router()
-comunidadRouter.use(['/propuestas', '/ofertas'], requireRol())
+comunidadRouter.use(['/propuestas', '/ofertas', '/skills'], requireRol())
 
 const error = (res: Response, status: number, mensaje: string) => void res.status(status).json({ error: mensaje })
 
@@ -106,5 +106,55 @@ comunidadRouter.delete('/ofertas/:id', async (req, res) => {
   if (!o) return error(res, 404, 'Esa oferta no existe')
   if (o.autorId !== req.usuario!.id && req.usuario!.rol === 'alumno') return error(res, 403, 'Solo puedes borrar tus ofertas')
   await prisma.oferta.delete({ where: { id: o.id } })
+  res.status(204).end()
+})
+
+// ── Skills ─────────────────────────────────────────────────────────────────
+// Son recursos sin tema (tipo = skill). La de un alumno queda oculta (visible = false) hasta que la aprueba un profesor.
+
+export const CATEGORIAS = ['frontend', 'backend', 'bases de datos', 'devops', 'ia', 'diseño', 'herramientas'] as const
+
+
+const skillPublica = {
+  id: true, titulo: true, url: true, categoria: true, contenidoMd: true, visible: true, creadoEn: true,
+  autor: { select: { id: true, nombre: true } },
+} as const
+
+comunidadRouter.get('/skills', async (req, res) => {
+  const u = req.usuario!
+  res.json(await prisma.recurso.findMany({
+    where: { tipo: 'skill', temaId: null, ...(u.rol === 'alumno' ? { OR: [{ visible: true }, { autorId: u.id }] } : {}) },
+    orderBy: [{ categoria: 'asc' }, { titulo: 'asc' }],
+    select: skillPublica,
+  }))
+})
+
+comunidadRouter.post('/skills', async (req, res) => {
+  const titulo = texto(req.body?.titulo)
+  const url = texto(req.body?.url)
+  const categoria = texto(req.body?.categoria).toLowerCase()
+  if (!titulo) return error(res, 400, 'Pon un título')
+  if (!esUrl(url)) return error(res, 400, 'Pon el enlace (https://…)')
+  if (!(CATEGORIAS as readonly string[]).includes(categoria)) return error(res, 400, 'Categoría no válida')
+  res.status(201).json(await prisma.recurso.create({
+    data: { tipo: 'skill', titulo, url, categoria, contenidoMd: texto(req.body?.contenidoMd) || null, autorId: req.usuario!.id, visible: req.usuario!.rol !== 'alumno' },
+    select: skillPublica,
+  }))
+})
+
+/** La skill de la URL (solo las que son skills, no los recursos de un tema). */
+const skillDe = (id: unknown) => prisma.recurso.findFirst({ where: { id: idDe(id), tipo: 'skill', temaId: null } })
+
+comunidadRouter.patch('/skills/:id/aprobar', requireRol('profesor', 'admin'), async (req, res) => {
+  const s = await skillDe(req.params.id)
+  if (!s) return error(res, 404, 'Esa skill no existe')
+  res.json(await prisma.recurso.update({ where: { id: s.id }, data: { visible: true }, select: skillPublica }))
+})
+
+comunidadRouter.delete('/skills/:id', async (req, res) => {
+  const s = await skillDe(req.params.id)
+  if (!s) return error(res, 404, 'Esa skill no existe')
+  if (s.autorId !== req.usuario!.id && req.usuario!.rol === 'alumno') return error(res, 403, 'Solo puedes borrar tus skills')
+  await prisma.recurso.delete({ where: { id: s.id } })
   res.status(204).end()
 })

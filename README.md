@@ -33,7 +33,7 @@ npm run test:e2e                     # E2E (arranca la API y la web solos; la BD
 
 Si `prisma dev` da otro puerto, cópialo en `DATABASE_URL` y en `DIRECT_URL` del `.env` (con `npx prisma dev ls` lo ves, desde `backend/`).
 
-Los tests de la API y los E2E usan esa BD local y van en serie, porque `prisma dev` se atasca con muchas conexiones a la vez. Si alguno falla con `ConnectionClosed` o `bind message supplies…`, es la BD local, no tu código: vuelve a lanzarlo o reinicia con `npm run db:local`.
+Los tests de la API y los E2E usan esa BD local y van en serie, porque `prisma dev` se atasca con muchas conexiones a la vez. Si alguno falla con `ConnectionClosed` o `bind message supplies…`, es la BD local, no tu código: vuelve a lanzarlo o reinicia con `npm run db:local`. Pasa sobre todo si lanzas `npm test` justo después de los E2E: el orden normal es `npm test` y luego `npm run test:e2e`.
 
 ### Despliegue (Supabase + Vercel)
 

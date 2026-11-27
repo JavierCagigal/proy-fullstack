@@ -21,14 +21,41 @@ export const siglas = (nombre: string) =>
 type Asig = { id: number; nombre: string }
 
 /** Pegatina de una asignatura. `grande` para cabeceras; por defecto, la de los accesos de "Hoy". */
-export function pegatina(a: Asig, { href, grande = false, sub }: { href?: string; grande?: boolean; sub?: string } = {}) {
+export function pegatina(a: Asig, { href, grande = false, sub, clase }: { href?: string; grande?: boolean; sub?: string; clase?: string } = {}) {
   const tag = href ? 'a' : 'span'
-  const tam = grande ? 'px-4 py-3 text-2xl sm:px-5 sm:py-4 sm:text-3xl' : 'px-4 py-3 text-lg'
+  const tam = clase ?? (grande ? 'px-4 py-3 text-2xl sm:px-5 sm:py-4 sm:text-3xl' : 'px-4 py-3 text-lg')
   // En móvil solo se ven las siglas (caben varias por fila); el nombre sigue ahí para lectores de pantalla
   return `<${tag} ${href ? `href="${href}"` : ''} class="sticker ${tam}" style="background:${vinilo(a.id)};transform:rotate(${giro(a.id)}deg);border-radius:${troquel(a.id)}" title="${esc(a.nombre)}">
       ${esc(siglas(a.nombre))}${sub ? `<span class="sr-only max-w-36 font-sans text-xs font-medium leading-snug opacity-85 sm:not-sr-only sm:mt-1.5 sm:block">${esc(sub)}</span>` : ''}
     </${tag}>`
 }
+
+/** Número estable a partir de un texto, para derivar color, giro y troquel de una pegatina libre. */
+const semilla = (t: string) => [...t].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7)
+
+/** Pegatina de cualquier cosa que no es una asignatura: una tecnología, un reto, una categoría… */
+export function pegatinaLibre(texto: string, clase = 'px-3 py-2 text-sm') {
+  const h = semilla(texto.toLowerCase())
+  return `<span class="sticker ${clase}" style="background:var(--color-${VINILOS[h % VINILOS.length]});transform:rotate(${GIROS[(h >> 3) % GIROS.length]}deg);border-radius:${TROQUELES[(h >> 5) % TROQUELES.length]}">${esc(texto)}</span>`
+}
+
+/** La tapa del portátil con las pegatinas que alguien ha ido ganando (retos, tecnologías…). */
+export function tapa(pegatinas: string[], { max = 99, grande = false, asignaturas = [] as Asig[] } = {}) {
+  const visibles = pegatinas.slice(0, Math.max(0, max - asignaturas.length))
+  const resto = pegatinas.length - visibles.length
+  const tam = grande ? 'px-4 py-2.5 text-base' : 'px-2.5 py-1.5 text-xs'
+  return `
+    <div class="flex flex-wrap content-start items-start gap-3 rounded-2xl bg-[#c7ccd3] ${grande ? 'min-h-48 p-6' : 'min-h-32 p-4'}">
+      ${asignaturas.map((a) => pegatina(a, { clase: tam })).join('')}
+      ${visibles.map((t) => pegatinaLibre(t, tam)).join('')}
+      ${resto > 0 ? `<span class="self-center text-sm font-semibold text-ink">+${resto}</span>` : ''}
+      ${pegatinas.length || asignaturas.length ? '' : '<span class="self-center text-sm font-medium text-[#3f4550]">Todavía sin pegatinas</span>'}
+    </div>`
+}
+
+/** Inicial en un círculo neutro (el color saturado es solo de las pegatinas). */
+export const avatar = (nombre: string, clase = 'size-9 text-base') =>
+  `<span aria-hidden="true" class="grid ${clase} shrink-0 place-items-center rounded-full bg-ink font-display font-extrabold text-white">${esc(nombre[0]?.toUpperCase() ?? '?')}</span>`
 
 /** Muestra pequeña del color de la asignatura, para listas. */
 export const chip = (a: Asig) =>
@@ -60,6 +87,7 @@ const ICONOS = {
   propuestas: '<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/>',
   ofertas: '<path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/>',
   check: '<path d="M20 6 9 17l-5-5"/>',
+  skills: '<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/>',
   votar: '<path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/>',
   lugar: '<path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/>',
   abajo: '<path d="m6 9 6 6 6-6"/>',
