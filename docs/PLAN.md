@@ -1,4 +1,4 @@
-# DAWHub: plan del proyecto
+# Commit (antes DAWHub): plan del proyecto
 
 > Proyecto FullStack con Vibe Coding. Equipo: Javier, Miguel y Alejandro.
 > **Exposición: 11 de diciembre de 2026.**
@@ -138,7 +138,7 @@ Un único `package.json` raíz con **npm workspaces** para lanzar todo con `npm 
 |---|---|---|
 | A | Backend: auth, JWT, middleware de roles, OAuth GitHub, admin de usuarios | "Login, OAuth con GitHub y control de permisos" |
 | B | Frontend: router History API, componentes, layout; asignaturas/recursos con visibilidad y subida de archivos | "Una SPA sin framework + archivos con URLs firmadas" |
-| C | Evaluaciones + notas, retos/hackathons (equipos, entregas, votos), propuestas, ofertas | "Cómo funciona un hackathon en DAWHub" |
+| C | Evaluaciones + notas, retos/hackathons (equipos, entregas, votos), propuestas, ofertas | "Cómo funciona un hackathon en Commit" |
 
 Cada uno hace los tests de su bloque. Los E2E se reparten por flujo.
 
@@ -175,8 +175,10 @@ Cada uno hace los tests de su bloque. Los E2E se reparten por flujo.
 | Ramas | `test` (por defecto, donde se integra todo) y `master` (lo que se presenta) | Se trabaja en ramas de funcionalidad con PR a `test`; antes de la exposición, `test` → `master` |
 | BD local | `prisma dev` en vez de Docker | El equipo no tiene Docker; Prisma trae un Postgres local con un comando |
 | IA | Pendiente (ver abajo) | Necesita la API de un proveedor; decidir si merece la pena |
+| Nombre | **Commit** (27/11) | Lo que hace un programador cada día y el compromiso que se pide al alumno |
+| Diseño | Mundo "pegatinas del portátil": rail grafito, pegatinas troqueladas por asignatura, Bricolage Grotesque + Figtree | Elegido con la skill de diseño Impeccable entre 4 direcciones; ver `frontend/PRODUCT.md` y `frontend/.impeccable/surfaces/` |
 
-**Pendiente de decidir:** la funcionalidad con IA (§8) y el nombre definitivo (DAWHub es provisional).
+**Pendiente de decidir:** la funcionalidad con IA (§8).
 
 **Aclaración sobre la IA (pregunta del equipo: "¿los alumnos tendrían que usar su propia IA?"):**
 - Si la integramos, **los alumnos no necesitan nada**: la plataforma llama al modelo con **nuestra** clave de API, guardada en el backend. El coste lo pone la plataforma (con la capa gratuita de Gemini, 0 € para una clase) y se limita el número de mensajes por usuario.
@@ -201,7 +203,33 @@ Cada uno hace los tests de su bloque. Los E2E se reparten por flujo.
 - Frontend: `usuario()` (de `session.ts`) para ocultar botones según el rol, y `navigate('/ruta')` (de `router.ts`) para navegar desde código.
 - Tests de API: crea tus usuarios en el test (ver `backend/src/auth.test.ts`). En E2E, `entrar(page, email)` de `e2e/tests/helpers.ts` con los usuarios del seed.
 
+**Hecho (27/11, noche):**
+- Producción desplegada desde `master`: https://proy-fullstack.vercel.app (front) y https://proy-fullstack-api.vercel.app (API), con la función en `fra1` junto a la BD.
+- Nombre **Commit** y diseño completo de la interfaz (ver §11).
+- **Bloque B, rama `feat/recursos`:** asignaturas (lista, crear, editar, borrar), temas (crear, renombrar, borrar) y recursos (apunte en Markdown, vídeo, enlace, proyecto) con visibilidad: visible, oculto o programado (`visible` + `visible_desde`). El alumno y los demás profesores solo ven lo publicado; el profesor de la asignatura y el admin lo ven todo, con su estado. "Ver como alumno" para comprobarlo. Archivos en Supabase Storage con URL firmada de subida y de descarga (5 min), que respeta la visibilidad. `GET /api/panel` para "Hoy" (lo próximo, retos abiertos, últimos recursos). Markdown propio y seguro (`frontend/src/markdown.ts`). Tests: 9 de API (Storage simulado), 4 de front y 1 E2E del flujo profesor → alumno.
+
+**Hecho (28/11): Bloque C, rama `feat/bloque-c`:**
+- **Calendario** (`/calendario`): exámenes, entregas y cierres de retos por mes, con lo pasado plegado.
+- **Notas** (`/notas`): el alumno ve las suyas con la media ponderada por peso. El profesor (o el admin) tiene un cuaderno por asignatura (alumnos × evaluaciones) donde la nota se guarda al salir de la casilla, y crea o borra evaluaciones.
+- **Retos** (`/retos`, `/retos/:id`): el profesor los publica. Los alumnos crean un equipo o se unen (un equipo por reto, con límite de miembros) y entregan repo y demo mientras el reto está abierto. Votan a equipos que han entregado, nunca al suyo, con un voto por reto que se puede cambiar. La clase ve los votos al cerrarse; el profesor, siempre.
+- **Propuestas** (`/propuestas`): cualquiera propone; la gente se apunta con "Me interesa" y el profesor aprueba o descarta.
+- **Ofertas** (`/ofertas`): la de un alumno queda pendiente hasta que la aprueba un profesor.
+- El admin puede **borrar usuarios**, salvo a sí mismo o a quien tenga asignaturas, recursos o retos a su nombre (409).
+- Tests: 25 de API y 10 E2E. Como `prisma dev` no aguanta bien conexiones en paralelo, los tests van en serie: Vitest con `fileParallelism: false` y Playwright con `workers: 1`.
+
+**Hecho (28/11): La clase y Skills, rama `feat/clase-skills`:**
+- **La clase** (`/clase`, `/clase/:id`): profesores y alumnos (sin admins ni emails), cada uno con "su portátil". Las pegatinas son las asignaturas que imparte, los retos en los que ha participado y las tecnologías de sus propuestas. El perfil enseña GitHub, bio, proyectos en retos (repo y demo) y propuestas. Cada uno edita el suyo (`PATCH /api/me`: nombre, GitHub con formato válido y bio de 280 caracteres como máximo), y el nombre del menú lleva a tu perfil.
+- **Skills** (`/skills`): enlaces por categoría (frontend, backend, bases de datos, devops, ia, diseño, herramientas), cada una con su pegatina. Son recursos sin tema (`tipo = skill`). La de un alumno queda oculta hasta que la aprueba un profesor.
+- Avatares neutros: el color saturado es solo de las pegatinas (regla de DESIGN.md).
+- Tests: 29 de API y 12 E2E.
+
+**Hecho (28/11): Login con GitHub, rama `feat/github-oauth`:**
+- OAuth2 propio, sin librerías. `GET /api/auth/github` lleva a GitHub con un `state` aleatorio en una cookie (CSRF). En el callback se comprueba el `state`, el `code` se cambia por un token y se leen el perfil y el email verificado.
+- Se entra en la cuenta que ya tiene ese GitHub. Si hay sesión, se conecta GitHub a tu cuenta. Si no, se enlaza por **email verificado** o se crea una cuenta nueva de alumno, sin contraseña. Se guardan `githubUsername` y `avatarUrl` (la foto sale en el menú, la clase y los usuarios).
+- `GET /api/auth/config` dice si hay claves configuradas: sin ellas no aparece el botón. Botón "Conectar con GitHub" en tu perfil. Tests con un GitHub falso (`fetch` simulado): 5 casos.
+
 **Siguiente:**
-1. ~~Desplegar~~ Hecho el 27/11: https://proy-fullstack.vercel.app (front) y https://proy-fullstack-api.vercel.app (API), con la BD de Supabase con tablas y seed. Falta poner `master` como rama de producción y `fra1` como región en Vercel, y hacer el PR `test` → `master`.
-2. Bloques B y C en paralelo (§9), en ramas `feat/…`.
-3. GitHub OAuth (§7 de `despliegue.md`: hacen falta 2 OAuth Apps).
+1. Crear las 2 OAuth Apps y poner sus variables (pasos en `despliegue.md` §7).
+2. Storage en producción: crear el bucket `recursos` y las 2 variables (pasos en `despliegue.md` §7).
+3. Volver a ejecutar el seed en Supabase y hacer el PR `test` → `master`.
+4. Decidir si se hace la funcionalidad con IA (§8).

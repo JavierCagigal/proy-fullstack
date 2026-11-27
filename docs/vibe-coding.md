@@ -59,3 +59,83 @@ Los ficheros de instrucciones usados son `AGENTS.md` (reglas comunes) y `CLAUDE.
 
 **Qué hubo que corregir:** dos E2E fallaban de forma intermitente: uno por una carrera entre el logout y la siguiente navegación, y otro porque dos registros en paralelo generaban el mismo email con `Date.now()`. Se corrigieron y se ejecutaron 3 veces seguidas en verde.
 
+
+---
+
+## 2026-11-27 · Javier · Claude Code (+ skill Impeccable) · Bloque B y diseño de toda la interfaz
+
+**Prompt (resumen):** "sigue con el bloque B, usa las skills de /impeccable para hacer toda la UI de la página web".
+
+**Proceso de diseño (Impeccable):**
+1. Entrevista de producto: uso principal en portátil, tono cercano (tuteando) y nombre. La IA propuso cuatro nombres (Forja, Aula.dev, Commit, Localhost) y el equipo eligió **Commit**. Queda en `frontend/PRODUCT.md`.
+2. La IA hizo una lista de 7 mundos visuales del entorno del alumno (libro de texto de FP, agenda, separadores, plano de metro, cartel suizo, pegatinas del portátil, grafo de git). La herramienta sorteó cuál construir para no caer en el diseño de siempre y propuso alternativas de un catálogo. En una página de decisión con bocetos HTML, el equipo eligió **"Pegatinas del portátil"**: cada asignatura es una pegatina troquelada con su color.
+3. Contrato de dirección en `frontend/.impeccable/surfaces/src-main-ts.md`, detector automático de errores de diseño y revisión final hecha por un agente independiente con capturas a 1440 y 390 px.
+
+**Resultado:** API del bloque B (asignaturas, temas, recursos con visibilidad, archivos con URLs firmadas, panel "Hoy") e interfaz rehecha: login, Hoy, Asignaturas, asignatura con temas y recursos, usuarios y 404.
+
+**Decisiones de la IA que conviene destacar:**
+- El color y las siglas de cada asignatura se calculan del id y del nombre (DWEC, DAW…), sin columnas nuevas en la BD.
+- La descarga de un archivo oculto responde 404, no 403, para no revelar que existe.
+- Markdown propio de ~50 líneas en vez de una librería: primero se escapa todo y solo se permiten enlaces `http(s)`. Tiene tests de XSS.
+- El borrado se confirma en dos pasos en el propio botón, sin `confirm()`.
+- Cada estado de visibilidad se distingue por la forma y no solo por el color (tachado, borde discontinuo), por accesibilidad.
+
+**Qué hubo que corregir:**
+- Al limpiar los nombres de archivo, la tilde se convertía en `_` (`versio_n`); lo cazó un test.
+- Dos pegatinas salían grises porque Tailwind v4 no genera las variables de tema que solo se usan en estilos en línea (`@theme static`).
+- La cabecera de la asignatura se aplastaba en móvil.
+- El botón de borrar en dos pasos no anunciaba la confirmación al lector de pantalla; lo descubrió un E2E.
+- La revisión final (un agente independiente, solo con capturas y el contrato) **rechazó las primeras capturas móviles**: la ventana de Chrome no baja de 500 px en macOS, así que "390 px" no era real. Rehechas con Playwright a tamaño exacto, salieron 9 problemas que antes no se veían: scroll horizontal en "Hoy", pegatinas apiladas que empujaban "Lo próximo" fuera de pantalla, "Salir" encima del menú, el discontinuo usado para dos estados distintos, un "0 días" en la cuenta atrás… Se corrigieron en dos rondas hasta el veredicto **ship**.
+- Al arreglar las pegatinas en móvil se introdujo un fallo de accesibilidad: un `aria-label` que no empezaba por el texto visible (WCAG 2.5.3). La segunda ronda lo cazó.
+- **Lección:** para comprobar el diseño en móvil, capturas con Playwright y `viewport` exacto, nunca redimensionando la ventana del navegador.
+
+---
+
+## 2026-11-28 · Javier · Claude Code · Bloque C (notas, retos, propuestas, ofertas)
+
+**Prompt (resumen):** "sigue con el bloque C".
+
+**Resultado:** calendario, notas (vista del alumno con media ponderada y cuaderno del profesor que guarda al salir de cada casilla), retos/hackathons (equipos, entrega de repo y demo, votos), propuestas y ofertas con aprobación, y borrado de usuarios para el admin. Todo con el mismo sistema de diseño (`frontend/DESIGN.md`), sin inventar estilos nuevos. 25 tests de API y 10 E2E.
+
+**Decisiones de la IA que conviene destacar:**
+- Las reglas del hackathon se reparten entre la BD (UNIQUE: un equipo y un voto por reto) y la API (no votarte a ti mismo, solo equipos que han entregado, límite de miembros). Un intento duplicado se convierte en un 409 claro, sin comprobar antes en la aplicación.
+- Los votos no se muestran a la clase hasta que cierra el reto, para no influir en la votación.
+- Borrar a un profesor con asignaturas da 409 en vez de borrar en cascada su contenido.
+- La pegatina "¡Estás dentro!" solo se anima al unirte a un equipo, que es el momento firmado del diseño.
+
+**Qué hubo que corregir:**
+- Prisma no admite `retoId` en la creación anidada de un miembro con clave compuesta; se pasó a una transacción.
+- `prisma dev` (PGlite) cortaba conexiones con tests en paralelo: se pusieron en serie.
+- Tres E2E fallaban por los propios tests: `name: 'Salir'` encontraba también "Salir del equipo"; `selectOption` lanzaba `change` aunque el valor no cambiara, y la app recargaba el cuaderno (arreglado en la app); y una nota igual a la que ya había no disparaba `change` (el test usa ahora un valor distinto en cada ejecución).
+- El test de registro creaba un usuario nuevo en cada ejecución y nunca lo borraba. Ahora el admin puede borrar usuarios y el test borra el suyo al final.
+
+---
+
+## 2026-11-28 · Javier · Claude Code · La clase y Skills
+
+**Prompt (resumen):** "sigue con la clase y skills".
+
+**Resultado:** "La clase" con un portátil por persona, en el que las pegatinas son las asignaturas que imparte, sus retos y las tecnologías de sus propuestas. Perfil editable (nombre, GitHub, bio) y Skills por categoría con aprobación del profesor. 29 tests de API y 12 E2E.
+
+**Decisiones de la IA que conviene destacar:**
+- La revisión de diseño anterior señaló que "la tapa del portátil" solo salía en el login. Ahora es la identidad de cada perfil, y las pegatinas se ganan con datos reales: nada de logros inventados.
+- Las pegatinas libres (tecnologías, retos, categorías) derivan su color, giro y troquel del propio texto: "Node" es siempre la misma pegatina en toda la web.
+- Las skills reutilizan la tabla `recursos` (`tipo = skill`, sin tema), como decía el plan, y `visible` hace de "aprobada". No hizo falta migración.
+- La clase nunca devuelve emails ni admins, y el nombre de usuario de GitHub se valida con su formato real.
+- Los avatares pasan a ser neutros, porque el documentador de diseño avisó de que usaban colores de pegatina.
+
+---
+
+## 2026-11-28 · Javier · Claude Code · Login con GitHub (OAuth2)
+
+**Prompt (resumen):** "sigue con el login de GitHub".
+
+**Resultado:** OAuth2 hecho a mano (unas 80 líneas, sin Passport ni librerías): `state` contra CSRF, intercambio del `code` en el backend, perfil y email verificado. Se reutiliza la misma sesión JWT en cookie, así que el resto de la app no cambia. Botón en login y registro, "Conectar con GitHub" en el perfil y foto de GitHub como avatar.
+
+**Decisiones de la IA que conviene destacar:**
+- Una cuenta existente solo se enlaza por email si GitHub dice que es el **principal y verificado**. Si no, cualquiera podría crear un GitHub con tu email y entrar en tu cuenta.
+- El callback se construye con `APP_URL` (el dominio del frontend), porque la petición llega reenviada por el rewrite de Vercel y el host del backend no sirve.
+- Sin claves no hay botón (`/api/auth/config`), así nadie se encuentra un botón roto en local.
+- Los tests simulan GitHub con un `fetch` falso y cubren: `state` falso, cuenta nueva, enlace solo con email verificado, conectar con sesión iniciada y sin claves.
+
+**Qué hubo que corregir:** el botón del registro decía "Entra con GitHub" porque comparaba con el título en vez de con el texto del botón.

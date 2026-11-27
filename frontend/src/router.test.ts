@@ -52,6 +52,17 @@ describe('createRouter', () => {
     expect(history.length).toBe(antes + 1)
   })
 
+  it('deja pasar anclas de la misma página y enlaces a la API', async () => {
+    document.body.innerHTML = '<a id="ancla" href="#tema-2">t</a><a id="api" href="/api/recursos/1/archivo">f</a><main></main>'
+    const router = createRouter({ '/': () => el('A') }, () => el('404'), document.querySelector('main')!)
+    await router.render()
+    for (const id of ['ancla', 'api']) {
+      const e = new MouseEvent('click', { bubbles: true, cancelable: true })
+      document.getElementById(id)!.dispatchEvent(e)
+      expect(e.defaultPrevented).toBe(false)
+    }
+  })
+
   it('muestra la página 404 si no hay ruta', async () => {
     const router = createRouter({}, () => el('404'), outlet)
     await router.navigate('/inexistente')

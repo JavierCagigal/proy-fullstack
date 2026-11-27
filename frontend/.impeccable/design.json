@@ -1,0 +1,546 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-27T12:00:00Z",
+  "title": "Design System: Commit",
+  "extensions": {
+    "colorMeta": {
+      "tomato": {
+        "role": "primary",
+        "displayName": "Tomate",
+        "canonical": "#ff5a36",
+        "tonalRamp": [
+          "oklch(15% 0.087 33.9)",
+          "oklch(26% 0.121 33.9)",
+          "oklch(38% 0.155 33.9)",
+          "oklch(49% 0.190 33.9)",
+          "oklch(61% 0.190 33.9)",
+          "oklch(72% 0.155 33.9)",
+          "oklch(84% 0.121 33.9)",
+          "oklch(95% 0.087 33.9)"
+        ]
+      },
+      "lemon": {
+        "role": "primary",
+        "displayName": "Limón",
+        "canonical": "#ffd23f",
+        "tonalRamp": [
+          "oklch(15% 0.068 90.9)",
+          "oklch(26% 0.095 90.9)",
+          "oklch(38% 0.121 90.9)",
+          "oklch(49% 0.148 90.9)",
+          "oklch(61% 0.148 90.9)",
+          "oklch(72% 0.121 90.9)",
+          "oklch(84% 0.095 90.9)",
+          "oklch(95% 0.068 90.9)"
+        ]
+      },
+      "mint": {
+        "role": "primary",
+        "displayName": "Menta",
+        "canonical": "#2ec4b6",
+        "tonalRamp": [
+          "oklch(15% 0.051 185.4)",
+          "oklch(26% 0.071 185.4)",
+          "oklch(38% 0.091 185.4)",
+          "oklch(49% 0.111 185.4)",
+          "oklch(61% 0.111 185.4)",
+          "oklch(72% 0.091 185.4)",
+          "oklch(84% 0.071 185.4)",
+          "oklch(95% 0.051 185.4)"
+        ]
+      },
+      "lilac": {
+        "role": "primary",
+        "displayName": "Lila",
+        "canonical": "#b9a6ff",
+        "tonalRamp": [
+          "oklch(15% 0.053 293.0)",
+          "oklch(26% 0.074 293.0)",
+          "oklch(38% 0.095 293.0)",
+          "oklch(49% 0.116 293.0)",
+          "oklch(61% 0.116 293.0)",
+          "oklch(72% 0.095 293.0)",
+          "oklch(84% 0.074 293.0)",
+          "oklch(95% 0.053 293.0)"
+        ]
+      },
+      "pink": {
+        "role": "primary",
+        "displayName": "Chicle",
+        "canonical": "#ff8fc4",
+        "tonalRamp": [
+          "oklch(15% 0.062 351.3)",
+          "oklch(26% 0.086 351.3)",
+          "oklch(38% 0.111 351.3)",
+          "oklch(49% 0.135 351.3)",
+          "oklch(61% 0.135 351.3)",
+          "oklch(72% 0.111 351.3)",
+          "oklch(84% 0.086 351.3)",
+          "oklch(95% 0.062 351.3)"
+        ]
+      },
+      "sky": {
+        "role": "primary",
+        "displayName": "Cielo",
+        "canonical": "#7cc0ff",
+        "tonalRamp": [
+          "oklch(15% 0.048 247.6)",
+          "oklch(26% 0.066 247.6)",
+          "oklch(38% 0.085 247.6)",
+          "oklch(49% 0.104 247.6)",
+          "oklch(61% 0.104 247.6)",
+          "oklch(72% 0.085 247.6)",
+          "oklch(84% 0.066 247.6)",
+          "oklch(95% 0.048 247.6)"
+        ]
+      },
+      "ok": {
+        "role": "secondary",
+        "displayName": "Verde publicado",
+        "canonical": "#17795e",
+        "tonalRamp": [
+          "oklch(15% 0.040 169.1)",
+          "oklch(26% 0.056 169.1)",
+          "oklch(38% 0.072 169.1)",
+          "oklch(49% 0.088 169.1)",
+          "oklch(61% 0.088 169.1)",
+          "oklch(72% 0.072 169.1)",
+          "oklch(84% 0.056 169.1)",
+          "oklch(95% 0.040 169.1)"
+        ]
+      },
+      "danger": {
+        "role": "secondary",
+        "displayName": "Óxido",
+        "canonical": "#b4300f",
+        "tonalRamp": [
+          "oklch(15% 0.073 34.1)",
+          "oklch(26% 0.101 34.1)",
+          "oklch(38% 0.130 34.1)",
+          "oklch(49% 0.159 34.1)",
+          "oklch(61% 0.159 34.1)",
+          "oklch(72% 0.130 34.1)",
+          "oklch(84% 0.101 34.1)",
+          "oklch(95% 0.073 34.1)"
+        ]
+      },
+      "danger-soft": {
+        "role": "secondary",
+        "displayName": "Óxido suave",
+        "canonical": "#ffe5de",
+        "tonalRamp": [
+          "oklch(15% 0.013 35.5)",
+          "oklch(26% 0.018 35.5)",
+          "oklch(38% 0.023 35.5)",
+          "oklch(49% 0.028 35.5)",
+          "oklch(61% 0.028 35.5)",
+          "oklch(72% 0.023 35.5)",
+          "oklch(84% 0.018 35.5)",
+          "oklch(95% 0.013 35.5)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Tinta",
+        "canonical": "#16181d",
+        "tonalRamp": [
+          "oklch(15% 0.004 268.2)",
+          "oklch(26% 0.006 268.2)",
+          "oklch(38% 0.008 268.2)",
+          "oklch(49% 0.010 268.2)",
+          "oklch(61% 0.010 268.2)",
+          "oklch(72% 0.008 268.2)",
+          "oklch(84% 0.006 268.2)",
+          "oklch(95% 0.004 268.2)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Gris lápiz",
+        "canonical": "#555b66",
+        "tonalRamp": [
+          "oklch(15% 0.008 262.7)",
+          "oklch(26% 0.011 262.7)",
+          "oklch(38% 0.015 262.7)",
+          "oklch(49% 0.018 262.7)",
+          "oklch(61% 0.018 262.7)",
+          "oklch(72% 0.015 262.7)",
+          "oklch(84% 0.011 262.7)",
+          "oklch(95% 0.008 262.7)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Línea",
+        "canonical": "#e3e6ea",
+        "tonalRamp": [
+          "oklch(15% 0.003 255.5)",
+          "oklch(26% 0.004 255.5)",
+          "oklch(38% 0.005 255.5)",
+          "oklch(49% 0.006 255.5)",
+          "oklch(61% 0.006 255.5)",
+          "oklch(72% 0.005 255.5)",
+          "oklch(84% 0.004 255.5)",
+          "oklch(95% 0.003 255.5)"
+        ]
+      },
+      "ground": {
+        "role": "neutral",
+        "displayName": "Aluminio",
+        "canonical": "#eceef1",
+        "tonalRamp": [
+          "oklch(15% 0.002 258.3)",
+          "oklch(26% 0.003 258.3)",
+          "oklch(38% 0.003 258.3)",
+          "oklch(49% 0.004 258.3)",
+          "oklch(61% 0.004 258.3)",
+          "oklch(72% 0.003 258.3)",
+          "oklch(84% 0.003 258.3)",
+          "oklch(95% 0.002 258.3)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Blanco",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "oklch(15% 0.000 89.9)",
+          "oklch(26% 0.000 89.9)",
+          "oklch(38% 0.000 89.9)",
+          "oklch(49% 0.000 89.9)",
+          "oklch(61% 0.000 89.9)",
+          "oklch(72% 0.000 89.9)",
+          "oklch(84% 0.000 89.9)",
+          "oklch(95% 0.000 89.9)"
+        ]
+      },
+      "wash": {
+        "role": "neutral",
+        "displayName": "Lavado",
+        "canonical": "#f1f2f5",
+        "tonalRamp": [
+          "oklch(15% 0.002 271.4)",
+          "oklch(26% 0.002 271.4)",
+          "oklch(38% 0.003 271.4)",
+          "oklch(49% 0.004 271.4)",
+          "oklch(61% 0.004 271.4)",
+          "oklch(72% 0.003 271.4)",
+          "oklch(84% 0.002 271.4)",
+          "oklch(95% 0.002 271.4)"
+        ]
+      },
+      "field-stroke": {
+        "role": "neutral",
+        "displayName": "Trazo de campo",
+        "canonical": "#cfd4da",
+        "tonalRamp": [
+          "oklch(15% 0.004 252.8)",
+          "oklch(26% 0.006 252.8)",
+          "oklch(38% 0.007 252.8)",
+          "oklch(49% 0.009 252.8)",
+          "oklch(61% 0.009 252.8)",
+          "oklch(72% 0.007 252.8)",
+          "oklch(84% 0.006 252.8)",
+          "oklch(95% 0.004 252.8)"
+        ]
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Filo",
+        "canonical": "#d9dde3",
+        "tonalRamp": [
+          "oklch(15% 0.004 258.3)",
+          "oklch(26% 0.005 258.3)",
+          "oklch(38% 0.007 258.3)",
+          "oklch(49% 0.009 258.3)",
+          "oklch(61% 0.009 258.3)",
+          "oklch(72% 0.007 258.3)",
+          "oklch(84% 0.005 258.3)",
+          "oklch(95% 0.004 258.3)"
+        ]
+      },
+      "rail": {
+        "role": "neutral",
+        "displayName": "Grafito",
+        "canonical": "#2b2f36",
+        "tonalRamp": [
+          "oklch(15% 0.006 261.7)",
+          "oklch(26% 0.008 261.7)",
+          "oklch(38% 0.010 261.7)",
+          "oklch(49% 0.013 261.7)",
+          "oklch(61% 0.013 261.7)",
+          "oklch(72% 0.010 261.7)",
+          "oklch(84% 0.008 261.7)",
+          "oklch(95% 0.006 261.7)"
+        ]
+      },
+      "rail-2": {
+        "role": "neutral",
+        "displayName": "Grafito claro",
+        "canonical": "#3a3f48",
+        "tonalRamp": [
+          "oklch(15% 0.007 262.3)",
+          "oklch(26% 0.010 262.3)",
+          "oklch(38% 0.013 262.3)",
+          "oklch(49% 0.015 262.3)",
+          "oklch(61% 0.015 262.3)",
+          "oklch(72% 0.013 262.3)",
+          "oklch(84% 0.010 262.3)",
+          "oklch(95% 0.007 262.3)"
+        ]
+      },
+      "rail-text": {
+        "role": "neutral",
+        "displayName": "Texto de rail",
+        "canonical": "#c9ced6",
+        "tonalRamp": [
+          "oklch(15% 0.005 259.8)",
+          "oklch(26% 0.007 259.8)",
+          "oklch(38% 0.009 259.8)",
+          "oklch(49% 0.011 259.8)",
+          "oklch(61% 0.011 259.8)",
+          "oklch(72% 0.009 259.8)",
+          "oklch(84% 0.007 259.8)",
+          "oklch(95% 0.005 259.8)"
+        ]
+      },
+      "rail-muted": {
+        "role": "neutral",
+        "displayName": "Rail apagado",
+        "canonical": "#9aa1ad",
+        "tonalRamp": [
+          "oklch(15% 0.008 261.3)",
+          "oklch(26% 0.011 261.3)",
+          "oklch(38% 0.014 261.3)",
+          "oklch(49% 0.018 261.3)",
+          "oklch(61% 0.018 261.3)",
+          "oklch(72% 0.014 261.3)",
+          "oklch(84% 0.011 261.3)",
+          "oklch(95% 0.008 261.3)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "h1 de cada página."
+      },
+      "display-hoy": {
+        "displayName": "Display Hoy",
+        "purpose": "h1 de \"Hoy\" a partir de lg."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Títulos de tema y del reto activo."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Títulos de sección dentro de paneles."
+      },
+      "sticker": {
+        "displayName": "Sticker",
+        "purpose": "Texto de las pegatinas (siglas); 24-30px en la pegatina grande."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "Frase de resumen bajo el h1, en gris lápiz."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Interfaz y listas; prosa a 70ch y 1.65."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Etiquetas de formulario, metadatos y sellos de estado."
+      },
+      "micro": {
+        "displayName": "Micro",
+        "purpose": "Etiquetas en píldora y salud de la API."
+      }
+    },
+    "shadows": [
+      {
+        "name": "asiento-panel",
+        "value": "0 1px 0 #d9dde3, 0 1px 3px rgb(22 24 29 / 0.04)",
+        "purpose": "Paneles blancos sobre el aluminio."
+      },
+      {
+        "name": "grosor-pegatina",
+        "value": "0 2px 0 rgb(22 24 29 / 0.16), 0 8px 18px rgb(22 24 29 / 0.10)",
+        "purpose": "Toda pegatina en reposo."
+      },
+      {
+        "name": "pegatina-levantada",
+        "value": "0 3px 0 rgb(22 24 29 / 0.16), 0 12px 24px rgb(22 24 29 / 0.14)",
+        "purpose": "Hover de una pegatina enlazada."
+      },
+      {
+        "name": "aro-chip",
+        "value": "0 0 0 1px #d9dde3",
+        "purpose": "Aro exterior de chips y avatares con borde blanco."
+      },
+      {
+        "name": "halo-foco-campo",
+        "value": "0 0 0 3px rgb(255 210 63 / 0.6)",
+        "purpose": "Foco de los campos, junto al trazo en tinta."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Hover de pegatinas (220ms) y la animación \"se pega\" (320ms)."
+      },
+      {
+        "name": "pegar",
+        "value": "320ms ease-out-expo: scale(1.06) rotate(-2deg) -> none",
+        "purpose": "Una sola vez al crear un tema o recurso; desactivada con prefers-reduced-motion."
+      },
+      {
+        "name": "control",
+        "value": "150ms",
+        "purpose": "Cambio de color y pulsación de botones."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Pegatina de asignatura",
+      "kind": "custom",
+      "refersTo": "sticker",
+      "description": "Firma del sistema: vinilo plano por asignatura, borde blanco troquelado, giro y sombra corta. Identidad y acceso.",
+      "html": "<div class=\"ds-row\"><a href=\"#\" class=\"ds-sticker\" style=\"background:#ff5a36;transform:rotate(-2deg);border-radius:16px\">DWEC<span>Desarrollo Web en Entorno Cliente</span></a><a href=\"#\" class=\"ds-sticker\" style=\"background:#ffd23f;transform:rotate(1.5deg);border-radius:999px\">DIW</a><a href=\"#\" class=\"ds-sticker\" style=\"background:#2ec4b6;transform:rotate(-1deg);border-radius:10px 26px\">DAW</a></div>",
+      "css": ".ds-row{display:flex;gap:16px;align-items:center;flex-wrap:wrap;padding:12px;background:#eceef1}.ds-sticker{display:inline-flex;flex-direction:column;justify-content:center;padding:12px 16px;border:4px solid #fff;color:#16181d;text-decoration:none;font-family:'Bricolage Grotesque Variable','Figtree Variable',sans-serif;font-weight:800;font-size:18px;line-height:1;box-shadow:0 2px 0 rgb(22 24 29 / .16),0 8px 18px rgb(22 24 29 / .10);transition:transform 220ms cubic-bezier(.16,1,.3,1),box-shadow 220ms cubic-bezier(.16,1,.3,1)}.ds-sticker span{font-family:'Figtree Variable',system-ui,sans-serif;font-size:12px;font-weight:500;margin-top:6px;max-width:9rem;line-height:1.3;opacity:.85}.ds-sticker:hover{transform:rotate(0) scale(1.04)!important;box-shadow:0 3px 0 rgb(22 24 29 / .16),0 12px 24px rgb(22 24 29 / .14)}.ds-sticker:focus-visible{outline:3px solid #16181d;outline-offset:2px}"
+    },
+    {
+      "name": "Botón primario",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Acción principal: publicar, guardar, entrar.",
+      "html": "<button class=\"ds-btn ds-btn-primario\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"M12 5v14\"/></svg>Publicar recurso</button>",
+      "css": ".ds-btn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:10px;padding:9px 16px;font-family:'Figtree Variable',system-ui,sans-serif;font-weight:700;font-size:16px;cursor:pointer;transition:background-color 150ms,box-shadow 150ms,transform 150ms}.ds-btn:active{transform:translateY(1px)}.ds-btn:focus-visible{outline:3px solid #16181d;outline-offset:2px}.ds-btn-primario{background:#16181d;color:#fff}.ds-btn-primario:hover{background:#2f333b}"
+    },
+    {
+      "name": "Botón secundario",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Acciones de apoyo: editar, abrir, descargar, añadir recurso.",
+      "html": "<button class=\"ds-btn ds-btn-secundario\">Editar</button>",
+      "css": ".ds-btn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:10px;padding:9px 16px;font-family:'Figtree Variable',system-ui,sans-serif;font-weight:700;font-size:16px;cursor:pointer;transition:background-color 150ms,box-shadow 150ms,transform 150ms}.ds-btn:active{transform:translateY(1px)}.ds-btn:focus-visible{outline:3px solid #16181d;outline-offset:2px}.ds-btn-secundario{background:#fff;color:#16181d;box-shadow:inset 0 0 0 1.5px #cfd4da}.ds-btn-secundario:hover{box-shadow:inset 0 0 0 1.5px #16181d}"
+    },
+    {
+      "name": "Botón de texto",
+      "kind": "button",
+      "refersTo": "button-text",
+      "description": "Acciones de icono discretas y Cancelar.",
+      "html": "<button class=\"ds-btn ds-btn-texto\">Cancelar</button>",
+      "css": ".ds-btn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:10px;padding:9px 16px;font-family:'Figtree Variable',system-ui,sans-serif;font-weight:700;font-size:16px;cursor:pointer;transition:background-color 150ms,box-shadow 150ms,transform 150ms}.ds-btn:active{transform:translateY(1px)}.ds-btn:focus-visible{outline:3px solid #16181d;outline-offset:2px}.ds-btn-texto{background:transparent;color:#555b66;padding:6px 8px;font-weight:600}.ds-btn-texto:hover{background:#f1f2f5;color:#16181d}"
+    },
+    {
+      "name": "Botón de borrado armado",
+      "kind": "button",
+      "refersTo": "button-danger",
+      "description": "Segundo paso del borrado: el primer clic convierte el botón en esta confirmación durante 4s.",
+      "html": "<button class=\"ds-btn ds-btn-peligro\">¿Borrar? Pulsa otra vez</button>",
+      "css": ".ds-btn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:10px;padding:9px 16px;font-family:'Figtree Variable',system-ui,sans-serif;font-weight:700;font-size:16px;cursor:pointer;transition:background-color 150ms,box-shadow 150ms,transform 150ms}.ds-btn:active{transform:translateY(1px)}.ds-btn:focus-visible{outline:3px solid #16181d;outline-offset:2px}.ds-btn-peligro{background:#b4300f;color:#fff}"
+    },
+    {
+      "name": "Campo",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Campo de texto con etiqueta semibold encima; foco en tinta con halo limón.",
+      "html": "<label class=\"ds-label\">Título<input class=\"ds-campo\" placeholder=\"Fetch y APIs\"></label>",
+      "css": ".ds-label{display:block;font-family:'Figtree Variable',system-ui,sans-serif;font-weight:600;color:#16181d;max-width:320px}.ds-campo{display:block;width:100%;box-sizing:border-box;margin-top:6px;border:1.5px solid #cfd4da;border-radius:10px;background:#fff;padding:9px 12px;font:inherit;font-weight:400;color:#16181d}.ds-campo::placeholder{color:#6b717c}.ds-campo:focus{border-color:#16181d;outline:none;box-shadow:0 0 0 3px rgb(255 210 63 / .6)}"
+    },
+    {
+      "name": "Rail de navegación",
+      "kind": "nav",
+      "refersTo": "nav-item",
+      "description": "Rail grafito de 248px con la marca como pegatina limón y la página actual en grafito claro.",
+      "html": "<nav class=\"ds-rail\"><a href=\"#\" class=\"ds-brand\">commit</a><a href=\"#\" class=\"ds-nav\" aria-current=\"page\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\"/><path d=\"M9 22V12h6v10\"/></svg>Hoy</a><a href=\"#\" class=\"ds-nav\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z\"/><path d=\"M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z\"/></svg>Asignaturas</a></nav>",
+      "css": ".ds-rail{display:flex;flex-direction:column;gap:4px;width:248px;box-sizing:border-box;padding:24px 16px;background:#2b2f36;font-family:'Figtree Variable',system-ui,sans-serif;}.ds-brand{align-self:flex-start;margin:0 0 28px 4px;padding:8px 14px;background:#ffd23f;color:#16181d;border:4px solid #fff;border-radius:16px;transform:rotate(-3deg);font-family:'Bricolage Grotesque Variable','Figtree Variable',sans-serif;font-weight:800;font-size:22px;line-height:1;text-decoration:none;box-shadow:0 2px 0 rgb(22 24 29 / .16),0 8px 18px rgb(22 24 29 / .10)}.ds-nav{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;color:#c9ced6;font-weight:500;text-decoration:none;transition:background-color 150ms,color 150ms}.ds-nav:hover,.ds-nav[aria-current=page]{background:#3a3f48;color:#fff}.ds-nav:focus-visible,.ds-brand:focus-visible{outline:3px solid #ffd23f;outline-offset:2px}"
+    },
+    {
+      "name": "Panel",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "Contenedor blanco asentado sobre el aluminio, con listas separadas por líneas.",
+      "html": "<section class=\"ds-panel\"><h2>Lo próximo</h2><ul><li><span class=\"ds-chip\" style=\"background:#7cc0ff\"></span>Entrega práctica Fetch<span class=\"ds-tag\">Entrega</span></li><li><span class=\"ds-chip\" style=\"background:#ff5a36\"></span>Examen tema 3<span class=\"ds-tag ds-tag-examen\">Examen</span></li></ul></section>",
+      "css": ".ds-panel{background:#fff;border-radius:14px;padding:24px;box-shadow:0 1px 0 #d9dde3,0 1px 3px rgb(22 24 29 / .04);font-family:'Figtree Variable',system-ui,sans-serif;color:#16181d;max-width:420px}.ds-panel h2{margin:0;font-family:'Bricolage Grotesque Variable','Figtree Variable',sans-serif;font-weight:800;font-size:20px}.ds-panel ul{list-style:none;margin:12px 0 0;padding:0}.ds-panel li{display:flex;align-items:center;gap:10px;padding:14px 0;border-top:1px solid #e3e6ea}.ds-panel li:first-child{border-top:0}.ds-chip{width:14px;height:14px;border-radius:5px;border:2px solid #fff;box-shadow:0 0 0 1px #d9dde3;box-sizing:border-box}.ds-tag{margin-left:auto;border-radius:999px;padding:4px 10px;font-size:12px;font-weight:700;background:#f1f2f5;color:#555b66}.ds-tag-examen{background:#ffe5de;color:#b4300f}"
+    },
+    {
+      "name": "Estados de visibilidad",
+      "kind": "custom",
+      "refersTo": "",
+      "description": "Visible, programado y oculto se leen por la forma: punto sólido, píldora y casilla discontinuas, tachado y casilla apagada.",
+      "html": "<ul class=\"ds-rec\"><li><span class=\"ds-ico\">A</span><div><b>Introducción a Fetch</b><small>Apunte · <span class=\"ds-vis\"><i></i>Visible</span></small></div></li><li><span class=\"ds-ico ds-ico-prog\">A</span><div><b>Práctica: API del tiempo</b><small>Proyecto · <span class=\"ds-prog\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M12 6v6l4 2\"/></svg>Se publica en 3 días · 1 dic, 09:00</span></small></div></li><li><span class=\"ds-ico ds-ico-oculto\">A</span><div><b class=\"ds-tachado\">Soluciones</b><small>Apunte · <span class=\"ds-oculto\">Oculto</span></small></div></li></ul>",
+      "css": ".ds-rec{list-style:none;margin:0;padding:0 24px;background:#fff;border-radius:14px;font-family:'Figtree Variable',system-ui,sans-serif;color:#16181d;max-width:480px}.ds-rec li{display:flex;gap:14px;align-items:flex-start;padding:16px 0;border-top:1px solid #e3e6ea}.ds-rec li:first-child{border-top:0}.ds-rec b{font-weight:600}.ds-rec small{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:4px;font-size:14px;color:#555b66}.ds-ico{display:grid;place-items:center;width:40px;height:40px;flex:none;border-radius:12px;background:#f1f2f5;box-sizing:border-box;font-weight:700}.ds-ico-prog{background:none;border:2px dashed #9aa1ad}.ds-ico-oculto{color:#8a909a}.ds-vis{display:inline-flex;align-items:center;gap:6px}.ds-vis i{width:8px;height:8px;border-radius:50%;background:#17795e}.ds-prog{display:inline-flex;align-items:center;gap:4px;border:1px dashed #16181d;border-radius:16px;padding:2px 8px;font-weight:600;color:#16181d}.ds-oculto{border:1px solid #555b66;border-radius:999px;padding:2px 8px;font-weight:600;color:#16181d}.ds-tachado{text-decoration:line-through;text-decoration-thickness:2px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "La tapa del portátil",
+    "overview": "Commit es la tapa de aluminio del portátil de un programador: una superficie neutra, gris y fría, sobre la que se pegan pegatinas troqueladas de vinilo. Cada asignatura (y, cuando lleguen, cada reto y cada skill) es una pegatina: color plano saturado, borde blanco grueso, una sombra corta y un pequeño giro. La pegatina es identidad y acceso a la vez; nunca es adorno. Todo lo demás (rail, suelo, paneles, texto, botones) vive en neutros estrictos de grafito y aluminio, para que el color signifique siempre \"esta asignatura\".\n\nLa densidad es de herramienta de trabajo, no de folleto: un rail grafito fijo a la izquierda, un suelo de aluminio claro y paneles blancos con listas separadas por líneas finas. La tipografía de cartel (Bricolage Grotesque a 800) se reserva para pegatinas y títulos; la interfaz habla en Figtree, en español y tuteando.\n\nEl sistema rechaza el aula virtual de tarjetas con cabecera azul y el gris corporativo con un único acento.",
+    "keyCharacteristics": [
+      "Neutros estrictos (grafito, aluminio, blanco, tinta) como campo; el color saturado solo en pegatinas.",
+      "Pegatinas con color, troquel y giro derivados del id de la asignatura: estables sin guardarlos en la BD.",
+      "Estado de visibilidad legible por la forma, no solo por el color.",
+      "Un único momento de movimiento firmado: lo recién publicado \"se pega\".",
+      "Iconos de trazo (Lucide, 1.75px) en línea, siempre en `currentColor`."
+    ],
+    "rules": [
+      {
+        "name": "The Una Sola Pegatina de Color Rule",
+        "body": "Las pegatinas troqueladas son lo único saturado de la pantalla. Si un elemento nuevo necesita color y no es una pegatina, usa un neutro o un color semántico.",
+        "section": "colors"
+      },
+      {
+        "name": "The Color Derivado Rule",
+        "body": "El vinilo, el troquel y el giro de una asignatura salen de su id vía `pegatina()`, `chip()` y `vinilo()`. No asignes vinilos a mano ni guardes colores en la base de datos.",
+        "section": "colors"
+      },
+      {
+        "name": "The Rótulo y Trabajo Rule",
+        "body": "Bricolage solo a 800 y solo en pegatinas, h1, h2 y cifras grandes; todo lo que se lee de corrido o se pulsa va en Figtree.",
+        "section": "typography"
+      },
+      {
+        "name": "The Solo lo Pegado Tiene Grosor Rule",
+        "body": "La sombra con desplazamiento duro pertenece al vinilo de las pegatinas. Paneles, botones y campos se quedan planos.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Troquel Rule",
+        "body": "Solo las pegatinas giran y solo las pegatinas cambian de silueta. La interfaz está siempre recta.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "**Do** construye cualquier aparición de una asignatura con `pegatina()` o `chip()` de `src/ui.ts`, para que vinilo, troquel y giro sean los mismos en todas partes.",
+      "**Do** mantén lo oculto y lo programado en la pantalla del profesor, distinguibles por forma: punto sólido (visible), píldora y casilla discontinuas (programado), tachado y casilla apagada (oculto). Solo \"Ver como alumno\" los retira.",
+      "**Do** reutiliza las clases de panel, campo y botón (primario, secundario, texto) antes de escribir utilidades nuevas, y los tokens de color del tema antes que cualquier hex suelto.",
+      "**Do** escribe la interfaz en español y tuteando (\"Inicia sesión\", \"Añadir recurso\", \"Pulsa otra vez\").",
+      "**Do** usa iconos del conjunto `icono()` (trazo Lucide de 1.75px en `currentColor`); si falta uno, añade sus trazos al mapa.",
+      "**Do** muestra fechas con `cuando()`, `fechaCorta()` y `fechaHora()`, y cifras con numerales tabulares.",
+      "**Do** respeta `prefers-reduced-motion` en todo lo que gire o se anime."
+    ],
+    "donts": [
+      "**Don't** uses un vinilo como fondo de botón, cabecera, banda o panel: el color saturado es de las pegatinas.",
+      "**Don't** pongas texto blanco sobre un vinilo.",
+      "**Don't** gires ni cambies la silueta de nada que no sea una pegatina.",
+      "**Don't** hagas desaparecer un recurso no publicado de la vista del profesor ni lo indiques solo con color.",
+      "**Don't** traigas React, Vue, Svelte, Lit ni librerías de componentes o iconos: el frontend es TypeScript vanilla con Tailwind v4 (regla del curso).",
+      "**Don't** cargues fuentes desde una CDN ni uses una fuente del sistema en títulos: Bricolage y Figtree van autoalojadas con `@fontsource-variable`.",
+      "**Don't** construyas un aula virtual de tarjetas con cabecera de color ni una interfaz gris con un único acento."
+    ]
+  }
+}

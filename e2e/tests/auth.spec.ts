@@ -4,27 +4,37 @@ import { entrar } from './helpers'
 test('sin sesión, cualquier ruta lleva al login', async ({ page }) => {
   await page.goto('/retos')
   await expect(page).toHaveURL('/login')
-  await expect(page.getByRole('heading', { name: 'Entrar' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Hola de nuevo' })).toBeVisible()
 })
 
 test('registro → entra como alumno, la sesión sobrevive a recargar y "Salir" la cierra', async ({ page }) => {
   await page.goto('/registro')
   await page.getByLabel('Nombre').fill('Alumna E2E')
-  await page.getByLabel('Email').fill(`e2e-${crypto.randomUUID()}@dawhub.dev`)
+  const email = `e2e-${crypto.randomUUID()}@dawhub.dev`
+  await page.getByLabel('Email').fill(email)
   await page.getByLabel('Contraseña').fill('contraseña-e2e')
   await page.getByRole('button', { name: 'Crear cuenta' }).click()
 
   await expect(page).toHaveURL('/')
-  await expect(page.getByRole('heading', { name: 'Hola, Alumna E2E' })).toBeVisible()
-  await expect(page.getByText('Alumna E2E · alumno')).toBeVisible()
+  const rail = page.getByRole('navigation', { name: 'Principal' })
+  await expect(rail.getByText('Alumna E2E')).toBeVisible()
+  await expect(rail.getByText('alumno', { exact: true })).toBeVisible()
 
   await page.reload()
-  await expect(page.getByRole('heading', { name: 'Hola, Alumna E2E' })).toBeVisible()
+  await expect(rail.getByText('Alumna E2E')).toBeVisible()
 
-  await page.getByRole('button', { name: 'Salir' }).click()
+  await page.getByRole('button', { name: 'Salir', exact: true }).click()
   await expect(page).toHaveURL('/login')
   await page.goto('/')
   await expect(page).toHaveURL('/login')
+
+  // Limpieza: el admin borra la cuenta (borrado en dos pasos)
+  await entrar(page, 'admin@dawhub.dev')
+  await page.goto('/admin/usuarios')
+  const fila = page.getByRole('row', { name: new RegExp(email) })
+  await fila.getByRole('button', { name: 'Borrar a Alumna E2E' }).click()
+  await fila.getByRole('button', { name: '¿Borrar a Alumna E2E?' }).click()
+  await expect(page.getByRole('status')).toHaveText('Alumna E2E se ha borrado.')
 })
 
 test('login con contraseña incorrecta muestra el error', async ({ page }) => {
@@ -39,7 +49,7 @@ test('login con contraseña incorrecta muestra el error', async ({ page }) => {
 test('solo el admin ve y usa la gestión de usuarios', async ({ page }) => {
   await entrar(page, 'lucia@dawhub.dev')
   await expect(page.getByRole('link', { name: 'Usuarios' })).toHaveCount(0)
-  await page.getByRole('button', { name: 'Salir' }).click()
+  await page.getByRole('button', { name: 'Salir', exact: true }).click()
   await expect(page).toHaveURL('/login')
 
   await entrar(page, 'admin@dawhub.dev')
