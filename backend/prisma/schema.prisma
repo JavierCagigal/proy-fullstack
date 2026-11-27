@@ -1,0 +1,219 @@
+// Modelo de datos: ver docs/PLAN.md §4
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+  // Vercel transpila archivo a archivo y Node ESM exige la extensión en los imports
+  importFileExtension = "js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Rol {
+  admin
+  profesor
+  alumno
+}
+
+enum TipoRecurso {
+  apunte
+  video
+  enlace
+  proyecto
+  skill
+}
+
+enum TipoEvaluacion {
+  examen
+  practica
+  proyecto
+}
+
+enum EstadoPropuesta {
+  abierta
+  aprobada
+  descartada
+}
+
+enum TipoOferta {
+  empleo
+  practicas
+}
+
+model Usuario {
+  id             Int      @id @default(autoincrement())
+  nombre         String
+  email          String   @unique
+  passwordHash   String? // null si solo entra con GitHub
+  rol            Rol      @default(alumno)
+  githubId       String?  @unique
+  githubUsername String?
+  avatarUrl      String?
+  bio            String?
+  creadoEn       DateTime @default(now())
+
+  asignaturas  Asignatura[]
+  recursos     Recurso[]
+  notas        Nota[]
+  retosCreados Reto[]
+  miembroDe    EquipoMiembro[]
+  votos        Voto[]
+  propuestas   Propuesta[]
+  interesEn    PropuestaInteres[]
+  ofertas      Oferta[]
+}
+
+model Asignatura {
+  id         Int     @id @default(autoincrement())
+  nombre     String
+  curso      String
+  profesorId Int
+  profesor   Usuario @relation(fields: [profesorId], references: [id])
+
+  temas        Tema[]
+  evaluaciones Evaluacion[]
+  retos        Reto[]
+}
+
+model Tema {
+  id           Int        @id @default(autoincrement())
+  asignaturaId Int
+  asignatura   Asignatura @relation(fields: [asignaturaId], references: [id], onDelete: Cascade)
+  titulo       String
+  orden        Int        @default(0)
+
+  recursos Recurso[]
+}
+
+model Recurso {
+  id            Int         @id @default(autoincrement())
+  temaId        Int? // null = skill / recurso general de la clase
+  tema          Tema?       @relation(fields: [temaId], references: [id], onDelete: Cascade)
+  tipo          TipoRecurso
+  categoria     String? // skills: frontend, backend, devops, ia...
+  titulo        String
+  contenidoMd   String?
+  url           String?
+  archivoPath   String? // ruta en Supabase Storage; el archivo NO va en la BD
+  archivoNombre String?
+  archivoBytes  Int?
+  visible       Boolean     @default(false)
+  visibleDesde  DateTime?
+  autorId       Int
+  autor         Usuario     @relation(fields: [autorId], references: [id])
+  creadoEn      DateTime    @default(now())
+}
+
+model Evaluacion {
+  id           Int            @id @default(autoincrement())
+  asignaturaId Int
+  asignatura   Asignatura     @relation(fields: [asignaturaId], references: [id], onDelete: Cascade)
+  titulo       String
+  tipo         TipoEvaluacion
+  fecha        DateTime
+  peso         Float          @default(1)
+
+  notas Nota[]
+}
+
+model Nota {
+  evaluacionId Int
+  evaluacion   Evaluacion @relation(fields: [evaluacionId], references: [id], onDelete: Cascade)
+  alumnoId     Int
+  alumno       Usuario    @relation(fields: [alumnoId], references: [id], onDelete: Cascade)
+  nota         Float // 0-10, se valida en la API
+  comentario   String?
+
+  @@id([evaluacionId, alumnoId])
+}
+
+model Reto {
+  id            Int         @id @default(autoincrement())
+  titulo        String
+  descripcionMd String
+  inicio        DateTime
+  fin           DateTime
+  maxMiembros   Int         @default(4)
+  asignaturaId  Int?
+  asignatura    Asignatura? @relation(fields: [asignaturaId], references: [id], onDelete: SetNull)
+  creadoPorId   Int
+  creadoPor     Usuario     @relation(fields: [creadoPorId], references: [id])
+
+  equipos Equipo[]
+}
+
+model Equipo {
+  id          Int       @id @default(autoincrement())
+  retoId      Int
+  reto        Reto      @relation(fields: [retoId], references: [id], onDelete: Cascade)
+  nombre      String
+  repoUrl     String?
+  demoUrl     String?
+  entregadoEn DateTime?
+
+  miembros EquipoMiembro[]
+  votos    Voto[]
+
+  @@unique([retoId, nombre])
+  @@unique([id, retoId]) // permite que miembros y votos referencien (equipo, reto) juntos
+}
+
+// retoId se repite aquí para que la BD garantice "un alumno, un equipo por reto"
+model EquipoMiembro {
+  equipoId  Int
+  retoId    Int
+  equipo    Equipo  @relation(fields: [equipoId, retoId], references: [id, retoId], onDelete: Cascade)
+  usuarioId Int
+  usuario   Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@id([equipoId, usuarioId])
+  @@unique([retoId, usuarioId])
+}
+
+// Un voto por usuario y reto. "No votar a tu propio equipo" se valida en la API.
+model Voto {
+  retoId    Int
+  equipoId  Int
+  equipo    Equipo  @relation(fields: [equipoId, retoId], references: [id, retoId], onDelete: Cascade)
+  usuarioId Int
+  usuario   Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@id([retoId, usuarioId])
+}
+
+model Propuesta {
+  id            Int             @id @default(autoincrement())
+  titulo        String
+  descripcionMd String
+  tecnologias   String[]
+  autorId       Int
+  autor         Usuario         @relation(fields: [autorId], references: [id], onDelete: Cascade)
+  estado        EstadoPropuesta @default(abierta)
+  creadoEn      DateTime        @default(now())
+
+  interesados PropuestaInteres[]
+}
+
+model PropuestaInteres {
+  propuestaId Int
+  propuesta   Propuesta @relation(fields: [propuestaId], references: [id], onDelete: Cascade)
+  usuarioId   Int
+  usuario     Usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@id([propuestaId, usuarioId])
+}
+
+model Oferta {
+  id        Int        @id @default(autoincrement())
+  titulo    String
+  empresa   String
+  url       String
+  ubicacion String?
+  tipo      TipoOferta
+  autorId   Int
+  autor     Usuario    @relation(fields: [autorId], references: [id], onDelete: Cascade)
+  aprobada  Boolean    @default(false)
+  creadoEn  DateTime   @default(now())
+}

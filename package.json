@@ -1,0 +1,17 @@
+{
+  "name": "proy-fullstack",
+  "private": true,
+  "workspaces": ["backend", "frontend", "e2e"],
+  "scripts": {
+    "dev": "concurrently -n api,web -c blue,green \"npm run dev -w backend\" \"npm run dev -w frontend\"",
+    "db:local": "npm run db:local -w backend",
+    "db:migrate": "npm run db:migrate -w backend",
+    "db:seed": "npm run db:seed -w backend",
+    "test": "npm test -w backend -w frontend",
+    "test:e2e": "npm test -w e2e",
+    "build": "npm run build -w frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

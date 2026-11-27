@@ -25,3 +25,37 @@ Los ficheros de instrucciones usados son `AGENTS.md` (reglas comunes) y `CLAUDE.
 - Una sola columna `rol` en vez de dos (`rol_principal` + `rol_usuario`), porque dos permiten combinaciones inválidas.
 - Archivos en Supabase Storage subidos con URL firmada, porque Vercel limita el cuerpo de las peticiones a 4,5 MB.
 - Restricciones `UNIQUE` en la BD para "un equipo por reto" y "un voto por reto".
+
+---
+
+## 2026-11-27 · Javier · Claude Code · Ramas, IA y esqueleto del proyecto
+
+**Prompt (resumen):** renombrar el repo a `proy-fullstack`, usar las ramas `master` y `test` (se sube todo a `test` y a `master` antes de presentar), preguntar si la IA obligaría a cada alumno a usar la suya, empezar el desarrollo y dejar el contexto en un .md para Antigravity.
+
+**Resultado:** repo renombrado; `main` → `master` y `test` como rama por defecto. Esqueleto completo: monorepo (npm workspaces), esquema Prisma + migración + seed, API Express con `/api/health`, SPA con router propio, y tests en Vitest y Playwright en verde. `docs/PLAN.md` §12 recoge el estado actual y el siguiente paso.
+
+**Decisiones de la IA que conviene destacar:**
+- `prisma dev` en lugar de Docker para la BD local, porque no hay Docker instalado y así basta un comando sin instalar nada más.
+- La IA no la tendrían que pagar los alumnos: si se integra, usa la clave de la plataforma. "Iniciar sesión con tu IA" no existe como OAuth. Queda como decisión del equipo.
+- Restricciones compuestas en la BD (`EquipoMiembro`/`Voto` → `(equipoId, retoId)`) para que un alumno no pueda estar en dos equipos del mismo reto.
+- Prisma fijado en la 7.10.1, porque la etiqueta `latest` de npm apuntaba a una release candidate de la 8.
+
+---
+
+## 2026-11-27 · Javier · Claude Code · Despliegue y bloque A (auth)
+
+**Prompt (resumen):** "empieza con todo, con el nombre de las ramas y con lo que haga falta; pásame los pasos para Supabase y Vercel, qué tokens copio y dónde, y explícame cómo se conecta cada cosa".
+
+**Resultado:**
+- PR `chore/despliegue`: `docs/despliegue.md` (arquitectura, tabla de variables y paso a paso), convención de ramas `feat/` `fix/` `docs/` `chore/`, y arreglo del backend para Vercel.
+- Rama `feat/auth`: registro, login, logout, `/api/me`, `requireRol`, admin de usuarios, páginas de login, registro y usuarios, y guardia de rutas en el router. Tests unitarios y E2E.
+
+**Decisiones de la IA que conviene destacar:**
+- Antes de escribir la guía, **compiló el backend como lo hace Vercel** (`vercel build` en local) y encontró que en producción habría fallado (`ERR_MODULE_NOT_FOUND`): Vercel no empaqueta el backend y Node ESM exige la extensión en los imports. Solución: imports con `.js` y Prisma generando igual. Nueva regla en `AGENTS.md`.
+- `pg` trata `sslmode=require` como "verificar el certificado" y el de Supabase no está en Node: la URL de la app lleva `uselibpqcompat=true&sslmode=require`.
+- El JWT solo guarda el id del usuario; el rol se lee de la BD en cada petición, así un cambio de rol se aplica sin volver a iniciar sesión.
+- La contraseña del seed sale de `SEED_PASSWORD`: el repo es público y `dawhub123` daría acceso de admin en producción.
+- El admin no puede cambiarse su propio rol, para que no se quede la app sin admin.
+
+**Qué hubo que corregir:** dos E2E fallaban de forma intermitente: uno por una carrera entre el logout y la siguiente navegación, y otro porque dos registros en paralelo generaban el mismo email con `Date.now()`. Se corrigieron y se ejecutaron 3 veces seguidas en verde.
+
