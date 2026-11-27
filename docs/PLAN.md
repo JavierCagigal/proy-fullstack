@@ -1,125 +1,169 @@
-# DAWHub: plan del proyecto (borrador para decidir en equipo)
+# DAWHub: plan del proyecto
 
 > Proyecto FullStack con Vibe Coding. Equipo: Javier, Miguel y Alejandro.
-> **Exposición: 11 de diciembre de 2026** (quedan unas 2 semanas desde el 27/11).
+> **Exposición: 11 de diciembre de 2026.**
+> Este documento es la **fuente de verdad** del proyecto. Recoge lo hablado y decidido con la IA (ver §11). Si algo cambia, se actualiza aquí.
 
 ## 1. La idea
 
-Portal de clase para estudiantes y profesores de DAW/informática. Reúne en un solo sitio lo que ahora está repartido entre Moodle, Drive, WhatsApp y GitHub:
+Portal para estudiantes y profesores de **informática (DAW/DAM/ASIR)**. No es un Moodle: está pensado para cómo aprende alguien que programa, con proyectos reales, hackathons y GitHub.
 
-- **Asignaturas → temas → recursos** (apuntes, vídeos, enlaces, proyectos). El profesor decide qué es visible y desde cuándo.
+- **Asignaturas → temas → recursos**: apuntes (Markdown o archivo), vídeos, enlaces y proyectos. El profesor decide qué es visible y desde cuándo.
 - **Evaluaciones y notas**: calendario de exámenes y entregas; el profesor pone las notas y cada alumno ve solo las suyas.
-- **La clase**: perfil de cada alumno con su GitHub.
-- **Skills**: enlaces de interés comunes para toda la clase (roadmaps, cursos, herramientas).
-- **Ofertas de trabajo/prácticas**: los alumnos proponen y el profesor aprueba.
+- **Retos / hackathons**: el profesor publica un reto con fechas. Los alumnos forman equipos y entregan su repo y su demo, y la clase vota.
+- **Propuestas de proyectos**: cualquier alumno propone una idea (descripción y tecnologías), los demás se apuntan y el profesor puede aprobarla o convertirla en reto.
+- **La clase**: perfil de cada alumno con su GitHub y sus proyectos.
+- **Skills**: enlaces comunes por categoría (frontend, backend, devops, IA…).
+- **Ofertas de trabajo / prácticas**: los alumnos proponen y el profesor aprueba.
 
-Lo que la diferencia de un Moodle: enfocada a DAW (GitHub de cada alumno, skills, ofertas del sector).
+## 2. Roles
 
-## 2. Pros y contras de la idea
+Hay **3 roles en una sola columna** `usuarios.rol`, con los valores `admin`, `profesor` y `alumno`.
 
-| Pros | Contras / riesgos |
-|---|---|
-| El público de la demo (la clase) son los usuarios: se entiende sin explicarla. | **Alcance**: son ~8 módulos para 2 semanas. Hay que recortar (ver §7). |
-| Los roles salen solos (profesor = admin, alumno = usuario) y el control de permisos se ve en la demo: apunte oculto, notas privadas. | Se parece a un "Moodle": hay que vender lo propio de DAW (GitHub, skills, ofertas, IA). |
-| Encajan los opcionales: login con GitHub y un asistente IA sobre los apuntes. | Las notas son datos sensibles: los permisos tienen que ser estrictos y estar probados (eso también juega a favor). |
-| Da 3 deep-dives individuales claros (ver §8). | Subir ficheros (PDF) complica: al principio, apuntes en Markdown y enlaces. Supabase Storage, después y si sobra tiempo. |
+- **admin**: nosotros, los desarrolladores. Gestiona usuarios y roles y puede hacerlo todo.
+- **profesor**: gestiona el contenido, las notas y los retos de **sus** asignaturas. Aprueba ofertas y propuestas.
+- **alumno**: consume contenido, ve sus notas, forma equipos, vota, propone proyectos y ofertas.
 
-## 3. Modelo de datos (simplificado a propósito)
+Así se cumple el enunciado: **Administrador** (`admin`) y **Usuario estándar**, que se divide en `profesor` y `alumno`.
 
-Apuntes, vídeos, enlaces, proyectos y skills son **una sola tabla `recursos`** con un campo `tipo`. Así 5 "módulos" son un único CRUD.
+> ¿Por qué no dos columnas (`rol_principal` + `rol_usuario`)? Porque permiten combinaciones sin sentido (admin + alumno) y obligan a comprobar dos campos en cada permiso. Con un enum, la base de datos solo admite valores válidos.
 
-```
-usuarios      id, nombre, email, password_hash (null si entra con GitHub), rol (admin|alumno),
-              github_username, creado_en
-asignaturas   id, nombre, profesor_id → usuarios
-temas         id, asignatura_id, titulo, orden
-recursos      id, tema_id (null = recurso general/skill), tipo (apunte|video|enlace|proyecto|skill),
-              titulo, contenido_md, url, visible (bool), visible_desde (fecha, opcional), autor_id
-evaluaciones  id, asignatura_id, titulo, tipo (examen|practica|proyecto), fecha, peso
-notas         evaluacion_id + alumno_id (PK), nota, comentario
-ofertas       id, titulo, empresa, url, ubicacion, autor_id, aprobada (bool)
-```
+Cualquiera que se registre entra como **alumno**. Solo un admin puede ascender a alguien a profesor o a admin. El primer admin se crea con el seed.
 
-## 4. Roles y permisos
-
-El enunciado pide **Administrador y Usuario estándar**. Propuesta: **admin = profesor**, **usuario = alumno**. Basta con una columna `rol`, así que si queremos un tercer rol (admin aparte del profesor) se añade luego sin rehacer nada.
-
-| Acción | Alumno | Profesor/Admin |
-|---|---|---|
-| Ver recursos visibles | ✅ | ✅ |
-| Ver recursos ocultos / programados | ❌ | ✅ |
-| Crear/editar asignaturas, temas, recursos | ❌ | ✅ |
-| Ver notas | solo las suyas | todas |
-| Poner notas | ❌ | ✅ |
-| Proponer oferta / skill | ✅ (queda pendiente) | ✅ |
-| Aprobar ofertas | ❌ | ✅ |
-| Gestionar usuarios y roles | ❌ | ✅ |
-| Editar su perfil (GitHub) | ✅ | ✅ |
+| Acción | Alumno | Profesor | Admin |
+|---|---|---|---|
+| Ver recursos visibles | ✅ | ✅ | ✅ |
+| Ver recursos ocultos / programados | ❌ | ✅ (los suyos) | ✅ |
+| Crear/editar asignaturas, temas, recursos, archivos | ❌ | ✅ (las suyas) | ✅ |
+| Ver notas | solo las suyas | las de sus asignaturas | todas |
+| Poner notas | ❌ | ✅ (sus asignaturas) | ✅ |
+| Crear retos/hackathons | ❌ | ✅ | ✅ |
+| Formar equipo, entregar y votar en un reto | ✅ | ❌ | ❌ |
+| Proponer proyecto / apuntarse | ✅ | ✅ | ✅ |
+| Aprobar propuestas y ofertas | ❌ | ✅ | ✅ |
+| Proponer oferta / skill | ✅ (queda pendiente) | ✅ | ✅ |
+| Gestionar usuarios y roles | ❌ | ❌ | ✅ |
+| Editar su perfil (GitHub, bio) | ✅ | ✅ | ✅ |
 
 Los permisos se comprueban **siempre en el backend**. El frontend solo oculta botones.
 
-## 5. Stack propuesto
+## 3. Archivos (sí, hay subida de archivos)
 
-Ojo, se suelen confundir: **Supabase = base de datos** (PostgreSQL gestionado) y **Vercel = despliegue** (hosting del frontend). El profesor no exige ningún proveedor concreto.
+No pesa para la base de datos, porque **los archivos no se guardan en ella**:
 
-| Capa | Propuesta | Por qué | Alternativa |
-|---|---|---|---|
-| Frontend | Vite + TypeScript vanilla + Tailwind | Lo que pide el enunciado. Vite solo empaqueta; no es un framework. | Bootstrap en vez de Tailwind |
-| Router SPA | Propio con History API (~50 líneas) | Obligatorio que sea nativo, y da para un deep-dive | — |
-| Backend | Node + Express + TypeScript | Mismo lenguaje que el front y el que mejor conoce la IA | FastAPI (Python) |
-| BD | PostgreSQL en **Supabase** | Gratis, Postgres real y panel web para enseñar los datos | Neon (Vercel Postgres) |
-| ORM | Prisma | Migraciones + seed + Prisma Studio para la demo | Drizzle, SQL a pelo con `pg` |
-| Auth | Propia: bcrypt + JWT en cookie httpOnly; GitHub OAuth como opcional | Un backend propio con roles es lo que se evalúa. Con Supabase Auth el backend quedaría vacío. | Supabase Auth (menos trabajo, menos nota) |
-| Tests | Vitest (front y back) + Supertest (API) + Playwright (E2E) | Una sola herramienta de tests unitarios para todo | Jest, Cypress |
-| Deploy front | Vercel | Gratis y despliega solo con cada push | Netlify |
-| Deploy back | Render | Servicio Express "de verdad", independiente | Vercel (Express como función) |
-| Local | `docker compose` con Postgres | Arranca en local en un comando, para la parte de "despliegue local" | Una BD de Supabase para dev |
+- El archivo va a **Supabase Storage**, un bucket privado. En la BD solo se guarda la ruta (`recursos.archivo_path`), el nombre y el tamaño.
+- **Límite que obliga a hacerlo así:** el backend está en Vercel, que no acepta cuerpos de petición de más de **4,5 MB**. Por eso el archivo no pasa por nuestro backend:
+  1. El front pide permiso al back: `POST /api/recursos/:id/archivo`. El back comprueba que el usuario es el profesor y devuelve una URL de subida firmada.
+  2. El navegador sube el archivo directamente a Supabase con esa URL.
+  3. Para descargarlo, el back comprueba la visibilidad y devuelve una URL firmada que caduca en unos minutos. Así un alumno no puede descargar un apunte oculto aunque sepa la ruta.
+- Límite propuesto: 20 MB por archivo, y solo PDF, imágenes, ZIP y código. El plan gratuito de Supabase da 1 GB.
 
-Avisos del plan gratuito:
-- **Render** duerme el backend tras 15 min sin uso; la primera petición tarda 30-60 s. **Antes de la demo hay que despertarlo**, o desplegar el back en Vercel.
-- **Supabase** pausa el proyecto tras 7 días sin actividad. Basta con entrar al panel.
-- Front (vercel.app) y back (onrender.com) en dominios distintos: la cookie se bloquearía como "third-party". Solución: un rewrite en Vercel para que `/api/*` apunte al backend, así es mismo origen.
+## 4. Modelo de datos
 
-## 6. Pantallas (rutas de la SPA)
+```
+usuarios           id, nombre, email (único), password_hash (null si entra con GitHub),
+                   rol (admin|profesor|alumno), github_id (único, null), github_username,
+                   avatar_url, bio, creado_en
+asignaturas        id, nombre, curso, profesor_id → usuarios
+temas              id, asignatura_id, titulo, orden
+recursos           id, tema_id (null = skill/recurso general), tipo (apunte|video|enlace|proyecto|skill),
+                   categoria (para skills: frontend|backend|devops|ia|…), titulo, contenido_md, url,
+                   archivo_path, archivo_nombre, archivo_bytes, visible (bool),
+                   visible_desde (fecha, opcional), autor_id
+evaluaciones       id, asignatura_id, titulo, tipo (examen|practica|proyecto), fecha, peso
+notas              evaluacion_id + alumno_id (PK), nota, comentario
+retos              id, titulo, descripcion_md, inicio, fin, max_miembros, asignatura_id (null), creado_por
+equipos            id, reto_id, nombre, repo_url, demo_url, entregado_en
+equipo_miembros    equipo_id, reto_id, usuario_id    UNIQUE(reto_id, usuario_id) → un alumno, un equipo por reto
+votos              reto_id, equipo_id, usuario_id    UNIQUE(reto_id, usuario_id) → un voto por reto, nunca a tu equipo
+propuestas         id, titulo, descripcion_md, tecnologias (text[]), autor_id,
+                   estado (abierta|aprobada|descartada), creado_en
+propuesta_interes  propuesta_id + usuario_id (PK)
+ofertas            id, titulo, empresa, url, ubicacion, tipo (empleo|practicas), autor_id, aprobada (bool)
+```
 
-`/login` · `/registro` · `/` (panel: próximos exámenes y últimos recursos) · `/asignaturas/:id` · `/calendario` · `/notas` · `/clase` · `/skills` · `/ofertas` · `/admin/usuarios`
+Las reglas que la BD puede garantizar sola (únicos, enums, claves foráneas) van como **restricciones en Prisma**, no como código.
 
-## 7. Alcance: qué entra y qué no
+## 5. Stack (decidido)
 
-**MVP (obligatorio, hasta el 4/12):** auth + roles, asignaturas/temas/recursos con visibilidad, evaluaciones + notas, clase con GitHub, ofertas, tests y despliegue.
+| Capa | Elección |
+|---|---|
+| Frontend | **Vite + TypeScript vanilla + Tailwind**. Router propio con History API. |
+| Backend | **Node + Express + TypeScript** |
+| BD | **PostgreSQL en Supabase**, con **Prisma** como ORM |
+| Archivos | **Supabase Storage** (bucket privado + URLs firmadas) |
+| Auth | Propia: **bcrypt + JWT en cookie httpOnly**, más **login con GitHub (OAuth2)** |
+| Tests | **Vitest** (front y back) + **Supertest** (API) + **Playwright** (E2E) |
+| Despliegue | **Vercel** para todo: 2 proyectos de Vercel en el mismo repo (`frontend/` y `backend/`) |
+| Local | `docker compose` con Postgres para la BD; Storage sobre el Supabase de desarrollo |
 
-**Opcionales (5-7/12, por orden):**
-1. **Login con GitHub (OAuth2)**: encaja a la perfección, porque además rellena el GitHub del alumno.
-2. **Asistente IA "pregúntale a los apuntes"**: chat que responde usando los apuntes visibles de la asignatura. Aprovechamos lo del ProyectoRAG. Hace falta la API de un LLM (Gemini tiene capa gratuita).
+Detalles de despliegue:
+- **Mismo origen:** el `vercel.json` del frontend redirige `/api/*` al proyecto del backend. Así la cookie es "first-party" y no la bloquean Safari ni Chrome.
+- **Prisma + Supabase en Vercel (serverless):** en ejecución, la URL del pooler (puerto 6543, `pgbouncer=true`); en las migraciones, la conexión directa (puerto 5432).
+- **Supabase** pausa el proyecto tras 7 días sin actividad. Basta con entrar al panel. Comprobarlo el día antes de la demo.
+- Secretos en las variables de entorno de Vercel y en `.env` local, nunca en el repo. Mantener `.env.example` al día.
 
-**Fuera:** subida de ficheros, foro, notificaciones y chat en tiempo real.
+## 6. Estructura del repo
 
-## 8. Reparto (alineado con los deep-dives de 5 min)
+```
+/frontend    SPA (Vite)
+/backend     API Express + Prisma (schema, migraciones y seed)
+/e2e         tests de Playwright
+/docs        plan y registro del vibe coding
+docker-compose.yml
+```
+
+Un único `package.json` raíz con **npm workspaces** para lanzar todo con `npm run dev` y `npm test`.
+
+## 7. Pantallas (rutas de la SPA)
+
+`/login` · `/registro` · `/` (panel: próximos exámenes, retos activos, últimos recursos) · `/asignaturas/:id` · `/calendario` · `/notas` · `/retos` · `/retos/:id` · `/propuestas` · `/clase` · `/clase/:id` (perfil) · `/skills` · `/ofertas` · `/admin/usuarios`
+
+## 8. Alcance
+
+**Núcleo (obligatorio):** auth + 3 roles, asignaturas/temas/recursos con visibilidad y archivos, evaluaciones + notas, retos/hackathons, propuestas, clase con GitHub, skills, ofertas, tests y despliegue.
+
+**Opcional que hacemos seguro:** **login con GitHub (OAuth2)**. Rellena solo el `github_username` y el avatar del alumno.
+
+**Opcional sin decidir: funcionalidad con IA.** Requiere llamar a la API de un modelo (Gemini, OpenAI o Claude) con una clave propia; las de pago cobran por uso, y Gemini tiene capa gratuita. Ideas que encajan:
+- "Pregúntale a los apuntes": un chat que responde usando los apuntes visibles de la asignatura (aprovecha nuestro ProyectoRAG).
+- Revisar propuestas de proyecto: sugiere tecnologías y alcance y detecta duplicados.
+- Moderación automática de ofertas.
+
+**Fuera:** foro, notificaciones y chat en tiempo real.
+
+## 9. Reparto (alineado con los deep-dives de 5 min)
 
 | Persona | Bloque | Deep-dive |
 |---|---|---|
-| A | Backend: auth, JWT, middleware de roles, OAuth GitHub, admin de usuarios | "Cómo funciona el login y el control de permisos" |
-| B | Frontend: router History API, sistema de componentes, layout, recursos con visibilidad | "Una SPA sin framework" |
-| C | Evaluaciones + notas, calendario, ofertas, asistente IA | "El asistente IA sobre los apuntes" |
+| A | Backend: auth, JWT, middleware de roles, OAuth GitHub, admin de usuarios | "Login, OAuth con GitHub y control de permisos" |
+| B | Frontend: router History API, componentes, layout; asignaturas/recursos con visibilidad y subida de archivos | "Una SPA sin framework + archivos con URLs firmadas" |
+| C | Evaluaciones + notas, retos/hackathons (equipos, entregas, votos), propuestas, ofertas | "Cómo funciona un hackathon en DAWHub" |
 
 Cada uno hace los tests de su bloque. Los E2E se reparten por flujo.
 
-## 9. Calendario
+## 10. Orden de trabajo
 
-| Fecha | Hito |
-|---|---|
-| 27-29 nov | Cerrar decisiones, montar el monorepo, esquema BD + seed y **desplegar un "hola mundo" en las 3 nubes** (pronto, para no llevarnos sustos al final) |
-| 30 nov - 4 dic | MVP en paralelo (A/B/C) |
-| 5-7 dic | Opcionales: GitHub OAuth e IA |
-| 8-9 dic | E2E completos, README y documentación del vibe coding |
-| 10 dic | Ensayo de la demo con el despliegue de producción |
-| **11 dic** | **Exposición** |
+1. Montar el monorepo, el esquema de Prisma y un seed con datos de demo (1 admin, 2 profesores, 6 alumnos, asignaturas reales de DAW).
+2. **Desplegar un "hola mundo" en Supabase y en los 2 proyectos de Vercel antes de programar funcionalidades.**
+3. Auth + roles, que bloquea todo lo demás.
+4. Bloques A/B/C en paralelo, en ramas y con PR.
+5. OAuth GitHub.
+6. E2E completos, README y `docs/vibe-coding.md`.
+7. El 10/12, ensayo de la demo sobre producción.
 
-## 10. Decisiones pendientes
+## 11. Decisiones tomadas y por qué (contexto de la conversación con la IA)
 
-1. ¿2 roles (profesor = admin) o 3 (admin, profesor, alumno)?
-2. ¿Backend en Render (más "independiente", duerme) o en Vercel (no duerme)?
-3. ¿Prisma o Drizzle?
-4. ¿Qué opcional(es) atacamos: GitHub OAuth, IA o los dos?
-5. ¿Repo público o privado? (Ahora es privado; hay que invitar al profesor o hacerlo público.)
-6. Nombre definitivo (DAWHub provisional).
+| Tema | Decisión | Motivo |
+|---|---|---|
+| Idea | Portal de clase para informática, no un Moodle genérico | Retos/hackathons, propuestas de proyecto, GitHub y skills lo hacen único |
+| Roles | 3 valores en una columna (`admin`, `profesor`, `alumno`) | admin = desarrolladores; cumple "Administrador + Usuario estándar" |
+| Recursos | Una tabla `recursos` con `tipo` | Apuntes, vídeos, enlaces, proyectos y skills en un único CRUD |
+| Archivos | Sí, en Supabase Storage con URLs firmadas | La BD solo guarda la ruta; se evita el límite de 4,5 MB de Vercel |
+| Auth | Propia (bcrypt + JWT en cookie httpOnly) + GitHub OAuth | Es lo que se evalúa; con Supabase Auth el backend quedaría vacío |
+| BD | PostgreSQL en Supabase + Prisma | Gratis, Postgres real, migraciones + seed + Prisma Studio para la demo |
+| Despliegue | Todo en Vercel (2 proyectos) | El equipo ya usa Vercel; no duerme como Render |
+| Repo | Público | Lo permite el enunciado y facilita la revisión del profesor |
+| IA | Pendiente | Necesita la API de un proveedor; decidir si merece la pena |
+
+**Pendiente de decidir:** la funcionalidad con IA (§8) y el nombre definitivo (DAWHub es provisional).

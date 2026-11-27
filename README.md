@@ -1,6 +1,6 @@
 # DAWHub
 
-Portal de clase para profesores y alumnos de DAW: apuntes con control de visibilidad, temas, evaluaciones y notas, perfiles con GitHub, skills y ofertas de trabajo.
+Portal de clase para profesores y alumnos de informática: apuntes y archivos con control de visibilidad, notas, retos/hackathons, propuestas de proyectos, perfiles con GitHub, skills y ofertas de trabajo.
 
 > 🚧 En fase de planificación. Ver [`docs/PLAN.md`](docs/PLAN.md).
 
