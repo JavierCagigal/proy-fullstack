@@ -1,0 +1,11 @@
+import { existsSync } from 'node:fs'
+import { defineConfig } from 'prisma/config'
+
+if (existsSync('.env')) process.loadEnvFile('.env')
+
+export default defineConfig({
+  schema: 'prisma/schema.prisma',
+  migrations: { path: 'prisma/migrations', seed: 'tsx prisma/seed.ts' },
+  // CLI (migrate) uses the direct connection; the app uses the pooled DATABASE_URL (src/db.ts).
+  datasource: { url: process.env.DIRECT_URL ?? process.env.DATABASE_URL ?? '' },
+})

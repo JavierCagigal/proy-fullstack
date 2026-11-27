@@ -95,7 +95,7 @@ Las reglas que la BD puede garantizar sola (únicos, enums, claves foráneas) va
 | Auth | Propia: **bcrypt + JWT en cookie httpOnly**, más **login con GitHub (OAuth2)** |
 | Tests | **Vitest** (front y back) + **Supertest** (API) + **Playwright** (E2E) |
 | Despliegue | **Vercel** para todo: 2 proyectos de Vercel en el mismo repo (`frontend/` y `backend/`) |
-| Local | `docker compose` con Postgres para la BD; Storage sobre el Supabase de desarrollo |
+| Local | **`prisma dev`** (Postgres local que trae Prisma, **sin Docker**): `npm run db:local`. Storage sobre el Supabase de desarrollo |
 
 Detalles de despliegue:
 - **Mismo origen:** el `vercel.json` del frontend redirige `/api/*` al proyecto del backend. Así la cookie es "first-party" y no la bloquean Safari ni Chrome.
@@ -110,7 +110,6 @@ Detalles de despliegue:
 /backend     API Express + Prisma (schema, migraciones y seed)
 /e2e         tests de Playwright
 /docs        plan y registro del vibe coding
-docker-compose.yml
 ```
 
 Un único `package.json` raíz con **npm workspaces** para lanzar todo con `npm run dev` y `npm test`.
@@ -152,6 +151,12 @@ Cada uno hace los tests de su bloque. Los E2E se reparten por flujo.
 6. E2E completos, README y `docs/vibe-coding.md`.
 7. El 10/12, ensayo de la demo sobre producción.
 
+## 10 bis. Flujo con Git
+
+- `test` es la rama por defecto. Cada funcionalidad va en su rama (`feat/auth`, `feat/retos`…) y se integra con un PR a `test`.
+- Vercel: **`master` = producción**; `test` y las ramas generan despliegues de preview para probar.
+- Antes de la exposición: PR `test` → `master`.
+
 ## 11. Decisiones tomadas y por qué (contexto de la conversación con la IA)
 
 | Tema | Decisión | Motivo |
@@ -163,7 +168,28 @@ Cada uno hace los tests de su bloque. Los E2E se reparten por flujo.
 | Auth | Propia (bcrypt + JWT en cookie httpOnly) + GitHub OAuth | Es lo que se evalúa; con Supabase Auth el backend quedaría vacío |
 | BD | PostgreSQL en Supabase + Prisma | Gratis, Postgres real, migraciones + seed + Prisma Studio para la demo |
 | Despliegue | Todo en Vercel (2 proyectos) | El equipo ya usa Vercel; no duerme como Render |
-| Repo | Público | Lo permite el enunciado y facilita la revisión del profesor |
-| IA | Pendiente | Necesita la API de un proveedor; decidir si merece la pena |
+| Repo | Público, llamado `proy-fullstack` (como la carpeta local) | Lo permite el enunciado y facilita la revisión del profesor |
+| Ramas | `test` (por defecto, donde se integra todo) y `master` (lo que se presenta) | Se trabaja en ramas de funcionalidad con PR a `test`; antes de la exposición, `test` → `master` |
+| BD local | `prisma dev` en vez de Docker | El equipo no tiene Docker; Prisma trae un Postgres local con un comando |
+| IA | Pendiente (ver abajo) | Necesita la API de un proveedor; decidir si merece la pena |
 
 **Pendiente de decidir:** la funcionalidad con IA (§8) y el nombre definitivo (DAWHub es provisional).
+
+**Aclaración sobre la IA (pregunta del equipo: "¿los alumnos tendrían que usar su propia IA?"):**
+- Si la integramos, **los alumnos no necesitan nada**: la plataforma llama al modelo con **nuestra** clave de API, guardada en el backend. El coste lo pone la plataforma (con la capa gratuita de Gemini, 0 € para una clase) y se limita el número de mensajes por usuario.
+- "Iniciar sesión con su IA" no es viable: no existe un "login con ChatGPT/Claude" que permita a una web usar la suscripción del alumno. La alternativa sería que cada alumno pegara su propia clave de API (de pago, distinta de la suscripción). Mala experiencia y riesgo de seguridad.
+- Por tanto, las opciones reales son **integrar una con nuestra clave** o **no hacer IA**. El punto opcional de OAuth ya lo cubrimos con GitHub, así que la IA es un extra.
+
+## 12. Estado actual y siguiente paso
+
+**Hecho (27/11):**
+- Monorepo con npm workspaces: `backend/`, `frontend/` y `e2e/`.
+- Esquema Prisma completo (§4) con la migración `init` y un seed de demo: admin, 2 profesores, 6 alumnos, asignaturas, notas, un reto con equipos, propuestas y ofertas. Contraseña de todos: `dawhub123`.
+- Backend Express: `GET /api/health` comprueba la API y la BD. Exporta la app para Vercel y escucha en el puerto 3000 en local.
+- Frontend: router propio (`frontend/src/router.ts`), layout con navegación, home y 404, helpers `api()` y `html()`/`esc()`.
+- Tests: Vitest en el backend (Supertest) y en el frontend (router con jsdom), y Playwright (home conectada y navegación SPA sin recarga). Todo en verde.
+
+**Siguiente:**
+1. Desplegar el "hola mundo" (necesita las cuentas del equipo): crear el proyecto en Supabase, el proyecto de Vercel del backend (root `backend/`) y el del frontend (root `frontend/`), y poner la URL del backend en `frontend/vercel.json`. Pasos en el README.
+2. Bloque A: auth (registro, login, logout, `/api/me`, middleware `requireRol`) + páginas de login y registro.
+3. Bloques B y C en paralelo (§9).

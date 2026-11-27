@@ -16,10 +16,12 @@ Roles: `admin` (desarrolladores), `profesor` y `alumno`, en una sola columna enu
 - Toda funcionalidad nueva lleva tests: unitarios (Vitest) y, si es un flujo de usuario, E2E (Playwright).
 
 ## Estilo
-- Código y comentarios en inglés; textos de la interfaz, commits y documentación en español.
+- Nombres del dominio (modelos, campos, rutas de la API y de la SPA) en español, como en `docs/PLAN.md`. El resto del código, en inglés. Interfaz, commits y documentación, en español.
+- Frontend: cada página es una función que devuelve un `HTMLElement` (ver `frontend/src/pages/`). Usa `html()` para crear elementos y `esc()` para todo dato de usuario (evita XSS) y `api()` para llamar al backend.
 - Lo más simple que funcione. Sin abstracciones "por si acaso" ni dependencias para lo que se hace en pocas líneas.
 - Nunca subir secretos: van en `.env` (ignorado). Mantener `.env.example` al día.
 
 ## Flujo de trabajo
-- Una rama por funcionalidad y PR a `main`; no hacer push directo a `main`.
+- Ramas: `test` es la de integración (por defecto) y `master` la de producción/presentación. Una rama por funcionalidad con PR a `test`. Nunca hacer push directo a `master`.
+- Antes de dar algo por terminado: `npm test` y `npm run test:e2e` en verde.
 - Al terminar una tarea con IA, añadir una entrada en `docs/vibe-coding.md` (prompt clave, herramienta, qué salió bien y qué hubo que corregir).

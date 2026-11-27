@@ -25,3 +25,17 @@ Los ficheros de instrucciones usados son `AGENTS.md` (reglas comunes) y `CLAUDE.
 - Una sola columna `rol` en vez de dos (`rol_principal` + `rol_usuario`), porque dos permiten combinaciones inválidas.
 - Archivos en Supabase Storage subidos con URL firmada, porque Vercel limita el cuerpo de las peticiones a 4,5 MB.
 - Restricciones `UNIQUE` en la BD para "un equipo por reto" y "un voto por reto".
+
+---
+
+## 2026-11-27 · Javier · Claude Code · Ramas, IA y esqueleto del proyecto
+
+**Prompt (resumen):** renombrar el repo a `proy-fullstack`, usar las ramas `master` y `test` (se sube todo a `test` y a `master` antes de presentar), preguntar si la IA obligaría a cada alumno a usar la suya, empezar el desarrollo y dejar el contexto en un .md para Antigravity.
+
+**Resultado:** repo renombrado; `main` → `master` y `test` como rama por defecto. Esqueleto completo: monorepo (npm workspaces), esquema Prisma + migración + seed, API Express con `/api/health`, SPA con router propio, y tests en Vitest y Playwright en verde. `docs/PLAN.md` §12 recoge el estado actual y el siguiente paso.
+
+**Decisiones de la IA que conviene destacar:**
+- `prisma dev` en lugar de Docker para la BD local, porque no hay Docker instalado y así basta un comando sin instalar nada más.
+- La IA no la tendrían que pagar los alumnos: si se integra, usa la clave de la plataforma. "Iniciar sesión con tu IA" no existe como OAuth. Queda como decisión del equipo.
+- Restricciones compuestas en la BD (`EquipoMiembro`/`Voto` → `(equipoId, retoId)`) para que un alumno no pueda estar en dos equipos del mismo reto.
+- Prisma fijado en la 7.10.1, porque la etiqueta `latest` de npm apuntaba a una release candidate de la 8.
