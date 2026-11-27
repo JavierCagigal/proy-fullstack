@@ -202,6 +202,6 @@ Cada uno hace los tests de su bloque. Los E2E se reparten por flujo.
 - Tests de API: crea tus usuarios en el test (ver `backend/src/auth.test.ts`). En E2E, `entrar(page, email)` de `e2e/tests/helpers.ts` con los usuarios del seed.
 
 **Siguiente:**
-1. Desplegar siguiendo [`despliegue.md`](despliegue.md) (Supabase + 2 proyectos de Vercel) y PR `test` → `master` para el primer despliegue de producción.
+1. ~~Desplegar~~ Hecho el 27/11: https://proy-fullstack.vercel.app (front) y https://proy-fullstack-api.vercel.app (API), con la BD de Supabase con tablas y seed. Falta poner `master` como rama de producción y `fra1` como región en Vercel, y hacer el PR `test` → `master`.
 2. Bloques B y C en paralelo (§9), en ramas `feat/…`.
 3. GitHub OAuth (§7 de `despliegue.md`: hacen falta 2 OAuth Apps).

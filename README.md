@@ -38,9 +38,9 @@ Paso a paso, qué clave va en cada sitio y cómo se conecta todo: [`docs/desplie
 ## 3. URLs de producción
 | Componente | URL |
 |---|---|
-| Frontend | _pendiente_ |
-| Backend | _pendiente_ |
-| Base de datos | Supabase (_pendiente_) |
+| Frontend | https://proy-fullstack.vercel.app |
+| Backend | https://proy-fullstack-api.vercel.app/api/health |
+| Base de datos | Supabase, proyecto `proy-fullstack` (Frankfurt) |
 
 ## 4. Proceso de Vibe Coding
 - Reglas para la IA: [`AGENTS.md`](AGENTS.md) (también `CLAUDE.md` y `.agent/rules/` para Antigravity)
