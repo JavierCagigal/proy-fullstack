@@ -58,7 +58,7 @@ function pintarRail() {
   const links = [...NAV, ...(u.rol === 'admin' ? [['/admin/usuarios', 'Usuarios', 'usuarios'] as [string, string, Icono]] : [])]
   rail.innerHTML = `
     <div class="flex items-center gap-3 px-4 py-3 lg:block lg:px-4 lg:pt-6">
-      <a href="/" aria-label="Commit, ir a Hoy" class="sticker -rotate-3 shrink-0 bg-lemon px-3 py-1.5 text-lg lg:ml-1 lg:px-3.5 lg:py-2 lg:text-[22px]">commit</a>
+      <a href="/" aria-label="Commit, ir a Hoy" class="sticker -rotate-3 shrink-0 bg-lemon px-3 py-1.5 text-lg lg:ml-1 lg:px-3.5 lg:py-2 lg:text-xl">commit</a>
       <ul class="flex min-w-0 gap-1 overflow-x-auto lg:mt-8 lg:flex-col">
         ${links.map(([href, label, ico]) => `
           <li><a href="${href}" data-nav class="flex items-center gap-3 whitespace-nowrap rounded-lg px-3 py-2.5 font-medium transition-colors hover:bg-rail-2 hover:text-white aria-[current=page]:bg-rail-2 aria-[current=page]:text-white">${icono(ico, 'hidden size-[18px] lg:block')}${label}</a></li>`).join('')}

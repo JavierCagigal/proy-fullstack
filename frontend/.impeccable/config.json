@@ -74,6 +74,159 @@
         ],
         "createdAt": "2026-11-27T15:13:51.927Z",
         "reason": "Claude: throwaway decision sketch under .impeccable/mocks (gitignored, never shipped)"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/assigned.html"
+        ],
+        "createdAt": "2026-11-27T15:23:41.830Z",
+        "reason": "Claude: throwaway decision sketch under .impeccable/mocks (gitignored, never shipped)"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/model-pick.html"
+        ],
+        "createdAt": "2026-11-27T15:23:41.850Z",
+        "reason": "Claude: throwaway decision sketch under .impeccable/mocks (gitignored, never shipped)"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/challenger-acetate.html"
+        ],
+        "createdAt": "2026-11-27T15:23:41.870Z",
+        "reason": "Claude: throwaway decision sketch under .impeccable/mocks (gitignored, never shipped)"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/canon.html"
+        ],
+        "createdAt": "2026-11-27T15:23:41.890Z",
+        "reason": "Claude: throwaway decision sketch under .impeccable/mocks (gitignored, never shipped)"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/assigned.html"
+        ],
+        "createdAt": "2026-11-27T15:23:46.066Z",
+        "reason": "Claude: throwaway decision sketch under .impeccable/mocks (gitignored, never shipped)"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/model-pick.html"
+        ],
+        "createdAt": "2026-11-27T15:23:46.088Z",
+        "reason": "Claude: throwaway decision sketch under .impeccable/mocks (gitignored, never shipped)"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/challenger-acetate.html"
+        ],
+        "createdAt": "2026-11-27T15:23:46.109Z",
+        "reason": "Claude: throwaway decision sketch under .impeccable/mocks (gitignored, never shipped)"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/canon.html"
+        ],
+        "createdAt": "2026-11-27T15:23:46.129Z",
+        "reason": "Claude: throwaway decision sketch under .impeccable/mocks (gitignored, never shipped)"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "sfmono-regular",
+        "files": [
+          "src/style.css"
+        ],
+        "createdAt": "2026-11-27T15:24:10.102Z",
+        "reason": "Claude: system monospace stack only for code blocks in Markdown notes (.prosa code/pre); code needs a mono face"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/assigned.html"
+        ],
+        "createdAt": "2026-11-27T15:24:10.159Z",
+        "reason": "Claude: throwaway decision sketch under .impeccable/mocks (gitignored, never shipped)"
+      },
+      {
+        "rule": "design-system-radius",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/assigned.html"
+        ],
+        "createdAt": "2026-11-27T15:24:10.179Z",
+        "reason": "Claude: throwaway decision sketch under .impeccable/mocks (gitignored, never shipped)"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/model-pick.html"
+        ],
+        "createdAt": "2026-11-27T15:24:10.199Z",
+        "reason": "Claude: throwaway decision sketch under .impeccable/mocks (gitignored, never shipped)"
+      },
+      {
+        "rule": "design-system-radius",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/model-pick.html"
+        ],
+        "createdAt": "2026-11-27T15:24:10.218Z",
+        "reason": "Claude: throwaway decision sketch under .impeccable/mocks (gitignored, never shipped)"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/challenger-acetate.html"
+        ],
+        "createdAt": "2026-11-27T15:24:10.237Z",
+        "reason": "Claude: throwaway decision sketch under .impeccable/mocks (gitignored, never shipped)"
+      },
+      {
+        "rule": "design-system-radius",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/challenger-acetate.html"
+        ],
+        "createdAt": "2026-11-27T15:24:10.257Z",
+        "reason": "Claude: throwaway decision sketch under .impeccable/mocks (gitignored, never shipped)"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/canon.html"
+        ],
+        "createdAt": "2026-11-27T15:24:10.281Z",
+        "reason": "Claude: throwaway decision sketch under .impeccable/mocks (gitignored, never shipped)"
+      },
+      {
+        "rule": "design-system-radius",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/canon.html"
+        ],
+        "createdAt": "2026-11-27T15:24:10.302Z",
+        "reason": "Claude: throwaway decision sketch under .impeccable/mocks (gitignored, never shipped)"
       }
     ]
   }
