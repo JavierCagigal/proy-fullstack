@@ -9,3 +9,4 @@ test-results/
 playwright-report/
 backend/src/generated/
 .vercel/
+frontend/.impeccable/hook.cache.json

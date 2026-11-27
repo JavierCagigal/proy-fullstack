@@ -1,0 +1,80 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "kicker-above-heading",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/assigned.html"
+        ],
+        "createdAt": "2026-11-27T15:13:51.774Z",
+        "reason": "Claude: throwaway decision sketch under .impeccable/mocks (gitignored, never shipped)"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/model-pick.html"
+        ],
+        "createdAt": "2026-11-27T15:13:51.797Z",
+        "reason": "Claude: throwaway decision sketch under .impeccable/mocks (gitignored, never shipped)"
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/model-pick.html"
+        ],
+        "createdAt": "2026-11-27T15:13:51.820Z",
+        "reason": "Claude: throwaway decision sketch under .impeccable/mocks (gitignored, never shipped)"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/canon.html"
+        ],
+        "createdAt": "2026-11-27T15:13:51.842Z",
+        "reason": "Claude: throwaway decision sketch under .impeccable/mocks (gitignored, never shipped)"
+      },
+      {
+        "rule": "low-contrast",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/assigned.html"
+        ],
+        "createdAt": "2026-11-27T15:13:51.862Z",
+        "reason": "Claude: throwaway decision sketch under .impeccable/mocks (gitignored, never shipped)"
+      },
+      {
+        "rule": "low-contrast",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/model-pick.html"
+        ],
+        "createdAt": "2026-11-27T15:13:51.884Z",
+        "reason": "Claude: throwaway decision sketch under .impeccable/mocks (gitignored, never shipped)"
+      },
+      {
+        "rule": "low-contrast",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/challenger-acetate.html"
+        ],
+        "createdAt": "2026-11-27T15:13:51.905Z",
+        "reason": "Claude: throwaway decision sketch under .impeccable/mocks (gitignored, never shipped)"
+      },
+      {
+        "rule": "low-contrast",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/canon.html"
+        ],
+        "createdAt": "2026-11-27T15:13:51.927Z",
+        "reason": "Claude: throwaway decision sketch under .impeccable/mocks (gitignored, never shipped)"
+      }
+    ]
+  }
+}

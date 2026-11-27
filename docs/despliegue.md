@@ -107,7 +107,11 @@ Para pasar a producción: PR `test` → `master` en GitHub y merge. Vercel despl
 
 ## 7. Lo que llegará más adelante
 
-- **Storage (bloque B):** en Supabase → Storage → **New bucket** `recursos`, **privado**. Añade `SUPABASE_URL` y `SUPABASE_SERVICE_ROLE_KEY` al backend en Vercel y redespliega.
+- **Storage (bloque B, ya hecho en el código):**
+  1. Supabase → **Storage** → **New bucket**: nombre `recursos`, **Public bucket desactivado** (privado). En *Additional configuration*, **Restrict file size: 20 MB**. Es la segunda barrera: el backend ya valida el tamaño, pero el navegador sube directo a Supabase.
+  2. Copia `SUPABASE_URL` (Project Settings → Data API → *Project URL*) y `SUPABASE_SERVICE_ROLE_KEY` (Project Settings → API Keys → la *service_role* de *Legacy API keys*, o una *Secret key* `sb_secret_…`).
+  3. Ponlas en **Vercel** (proyecto `proy-fullstack-api`, Production y Preview) y **redespliega**. Ponlas también en tu `backend/.env` para poder subir archivos en local: en local se usa el mismo bucket.
+  4. Sin estas variables todo funciona igual excepto subir y descargar archivos, que dan error.
 - **GitHub OAuth:** crea **dos** OAuth Apps (cada una admite un solo *callback*). La de local, con callback `http://localhost:5173/api/auth/github/callback`, y la de producción, con `https://proy-fullstack.vercel.app/api/auth/github/callback`. El callback pasa por el dominio del frontend gracias al rewrite, y así la cookie queda en el dominio bueno. La de producción va en Vercel y la de local, en tu `.env`.
 
 ## 8. Antes de la demo
