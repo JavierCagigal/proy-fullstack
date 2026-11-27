@@ -1,10 +1,11 @@
 import { api } from '../api'
-import { html } from '../html'
+import { esc, html } from '../html'
+import { usuario } from '../session'
 
 export function homePage() {
   const el = html(`
     <section class="space-y-4">
-      <h1 class="text-3xl font-bold">DAWHub</h1>
+      <h1 class="text-3xl font-bold">Hola, ${esc(usuario()?.nombre)}</h1>
       <p class="text-slate-600">Portal de clase para profesores y alumnos de informática.</p>
       <p data-health class="text-sm text-slate-500">Comprobando la API…</p>
     </section>`)

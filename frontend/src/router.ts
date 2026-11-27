@@ -18,8 +18,18 @@ export function match(routes: Routes, path: string): { page: Page; params: Param
   return null
 }
 
-export function createRouter(routes: Routes, notFound: Page, outlet: HTMLElement) {
+/** Devuelve otra ruta para redirigir (p. ej. a /login sin sesión) o null para dejar pasar. */
+export type Guard = (path: string) => string | null
+
+type Router = { navigate: (path: string) => Promise<void>; render: () => Promise<void> }
+let current: Router | undefined
+/** Navegación desde código (p. ej. tras el login). Usa el router de la app. */
+export const navigate = (path: string) => current?.navigate(path)
+
+export function createRouter(routes: Routes, notFound: Page, outlet: HTMLElement, guard: Guard = () => null): Router {
   async function render() {
+    const redirect = guard(location.pathname)
+    if (redirect && redirect !== location.pathname) history.replaceState(null, '', redirect)
     const found = match(routes, location.pathname)
     outlet.replaceChildren(await (found ? found.page(found.params) : notFound({})))
   }
@@ -38,5 +48,5 @@ export function createRouter(routes: Routes, notFound: Page, outlet: HTMLElement
   })
   window.addEventListener('popstate', render)
 
-  return { navigate, render }
+  return (current = { navigate, render })
 }

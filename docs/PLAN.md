@@ -192,7 +192,16 @@ Cada uno hace los tests de su bloque. Los E2E se reparten por flujo.
 - Frontend: router propio (`frontend/src/router.ts`), layout con navegación, home y 404, helpers `api()` y `html()`/`esc()`.
 - Tests: Vitest en el backend (Supertest) y en el frontend (router con jsdom), y Playwright (home conectada y navegación SPA sin recarga). Todo en verde.
 
+**Hecho (27/11, tarde):**
+- Backend listo para Vercel: imports con `.js` (comprobado con `vercel build`). Guía de despliegue en [`despliegue.md`](despliegue.md). PR `chore/despliegue`.
+- **Bloque A (auth), rama `feat/auth`:** registro (entra como alumno), login, logout, `GET /api/me`, middleware `requireRol` y admin de usuarios (`GET /api/admin/usuarios`, `PATCH /api/admin/usuarios/:id` con `{ rol }`). En el front: `/login`, `/registro`, `/admin/usuarios`, cabecera con sesión y guardia (sin sesión, todo lleva a `/login`). Tests: 7 de API, 1 del router y 4 E2E.
+
+**Cómo usar la auth en los bloques B y C:**
+- Backend: protege cada ruta con `requireRol()` (cualquiera con sesión) o `requireRol('profesor', 'admin')`, y usa `req.usuario` (`id`, `rol`…). "Solo las suyas" (asignaturas del profesor, notas del alumno) se comprueba en la consulta con `req.usuario.id`. Cada bloque tiene su archivo en `backend/src/routes/` y se monta en `app.ts`.
+- Frontend: `usuario()` (de `session.ts`) para ocultar botones según el rol, y `navigate('/ruta')` (de `router.ts`) para navegar desde código.
+- Tests de API: crea tus usuarios en el test (ver `backend/src/auth.test.ts`). En E2E, `entrar(page, email)` de `e2e/tests/helpers.ts` con los usuarios del seed.
+
 **Siguiente:**
-1. Desplegar el "hola mundo" (necesita las cuentas del equipo): crear el proyecto en Supabase, el proyecto de Vercel del backend (root `backend/`) y el del frontend (root `frontend/`), y poner la URL del backend en `frontend/vercel.json`. Pasos en el README.
-2. Bloque A: auth (registro, login, logout, `/api/me`, middleware `requireRol`) + páginas de login y registro.
-3. Bloques B y C en paralelo (§9).
+1. Desplegar siguiendo [`despliegue.md`](despliegue.md) (Supabase + 2 proyectos de Vercel) y PR `test` → `master` para el primer despliegue de producción.
+2. Bloques B y C en paralelo (§9), en ramas `feat/…`.
+3. GitHub OAuth (§7 de `despliegue.md`: hacen falta 2 OAuth Apps).
