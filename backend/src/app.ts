@@ -8,6 +8,7 @@ import { authRouter } from './routes/auth.js'
 import { claseRouter } from './routes/clase.js'
 import { comunidadRouter } from './routes/comunidad.js'
 import { evaluacionesRouter } from './routes/evaluaciones.js'
+import { githubRouter } from './routes/github.js'
 import { panelRouter } from './routes/panel.js'
 import { retosRouter } from './routes/retos.js'
 
@@ -22,7 +23,7 @@ app.get('/api/health', async (_req, res) => {
   res.json({ api: true, db })
 })
 
-app.use('/api', authRouter, adminRouter, asignaturasRouter, panelRouter, evaluacionesRouter, retosRouter, comunidadRouter, claseRouter)
+app.use('/api', authRouter, githubRouter, adminRouter, asignaturasRouter, panelRouter, evaluacionesRouter, retosRouter, comunidadRouter, claseRouter)
 
 app.use('/api', (_req, res) => {
   res.status(404).json({ error: 'Ruta no encontrada' })

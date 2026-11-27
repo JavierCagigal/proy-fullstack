@@ -36,7 +36,8 @@ Hazla **una sola vez**. Después, cada merge a `master` se despliega solo.
 | `SEED_PASSWORD` | Contraseña de los usuarios de demo | La eliges tú (el repo es público y `dawhub123` la conoce todo el mundo) | Solo en tu terminal al hacer el seed |
 | `SUPABASE_URL` | URL del proyecto, para Storage | Supabase → Project Settings → Data API → *Project URL* | Vercel backend (cuando llegue el bloque B) |
 | `SUPABASE_SERVICE_ROLE_KEY` | Clave de servidor de Supabase. **Salta todos los permisos** | Supabase → Project Settings → API Keys → *Secret key* (`sb_secret_…`) o la *service_role* legacy | Vercel backend (bloque B). **Nunca** en el frontend ni en el repo |
-| `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` | Login con GitHub | GitHub → Settings → Developer settings → OAuth Apps | Vercel backend (cuando llegue el OAuth) |
+| `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` | Login con GitHub | GitHub → Settings → Developer settings → OAuth Apps (§7) | Vercel backend + `backend/.env` (una app para cada uno) |
+| `APP_URL` | URL de la web, para el callback de GitHub | `https://proy-fullstack.vercel.app` (local: `http://localhost:5173`) | Vercel backend + `backend/.env` |
 
 En local, todo esto va en `backend/.env` (está en `.gitignore`). La plantilla es `backend/.env.example`.
 
@@ -112,7 +113,19 @@ Para pasar a producción: PR `test` → `master` en GitHub y merge. Vercel despl
   2. Copia `SUPABASE_URL` (Project Settings → Data API → *Project URL*) y `SUPABASE_SERVICE_ROLE_KEY` (Project Settings → API Keys → la *service_role* de *Legacy API keys*, o una *Secret key* `sb_secret_…`).
   3. Ponlas en **Vercel** (proyecto `proy-fullstack-api`, Production y Preview) y **redespliega**. Ponlas también en tu `backend/.env` para poder subir archivos en local: en local se usa el mismo bucket.
   4. Sin estas variables todo funciona igual excepto subir y descargar archivos, que dan error.
-- **GitHub OAuth:** crea **dos** OAuth Apps (cada una admite un solo *callback*). La de local, con callback `http://localhost:5173/api/auth/github/callback`, y la de producción, con `https://proy-fullstack.vercel.app/api/auth/github/callback`. El callback pasa por el dominio del frontend gracias al rewrite, y así la cookie queda en el dominio bueno. La de producción va en Vercel y la de local, en tu `.env`.
+- **Login con GitHub (ya hecho en el código):** hacen falta **dos** OAuth Apps, porque cada una admite un solo *callback*. Créalas en GitHub → Settings → Developer settings → **OAuth Apps** → **New OAuth App**:
+
+  | Campo | App de local | App de producción |
+  |---|---|---|
+  | Application name | `Commit (local)` | `Commit` |
+  | Homepage URL | `http://localhost:5173` | `https://proy-fullstack.vercel.app` |
+  | Authorization callback URL | `http://localhost:5173/api/auth/github/callback` | `https://proy-fullstack.vercel.app/api/auth/github/callback` |
+
+  En cada una, copia el **Client ID** y pulsa **Generate a new client secret** (el secreto solo se ve una vez).
+  - **Local**, en `backend/.env`: `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` y `APP_URL="http://localhost:5173"`. Reinicia `npm run dev`.
+  - **Producción**, en Vercel (proyecto `proy-fullstack-api`, Production y Preview): las mismas tres, con `APP_URL` = `https://proy-fullstack.vercel.app`. Después, **Redeploy**.
+
+  El callback pasa por el dominio del frontend gracias al rewrite, y así la cookie de sesión queda en el dominio de la web. Sin estas variables, el botón "Entra con GitHub" simplemente no aparece.
 
 ## 8. Antes de la demo
 

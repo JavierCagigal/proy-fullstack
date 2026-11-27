@@ -3,7 +3,7 @@ import { api } from './api'
 export type Rol = 'admin' | 'profesor' | 'alumno'
 export type Usuario = {
   id: number; nombre: string; email: string; rol: Rol
-  githubUsername: string | null; avatarUrl: string | null; bio: string | null
+  githubId: string | null; githubUsername: string | null; avatarUrl: string | null; bio: string | null
 }
 
 // Usuario con sesión iniciada (null si no hay). La sesión real es la cookie httpOnly; esto es solo para pintar la interfaz.

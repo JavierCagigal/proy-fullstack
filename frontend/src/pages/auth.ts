@@ -2,6 +2,7 @@ import { api } from '../api'
 import { html } from '../html'
 import { navigate } from '../router'
 import { setUsuario, type Usuario } from '../session'
+import { icono } from '../ui'
 
 // La tapa del portátil: pegatinas de la clase (decorativas, aria-hidden)
 const TAPA = [
@@ -28,6 +29,10 @@ function authPage(titulo: string, boton: string, endpoint: string, campos: strin
       <section class="flex items-center justify-center px-6 py-12">
         <div class="w-full max-w-sm">
           <h1 class="font-display text-4xl font-extrabold tracking-tight">${titulo}</h1>
+          <div data-github hidden class="mt-8">
+            <a href="/api/auth/github" class="btn btn-secundario w-full py-3 text-base">${icono('github')}${boton === 'Crear cuenta' ? 'Regístrate' : 'Entra'} con GitHub</a>
+            <p class="mt-6 flex items-center gap-3 text-sm text-muted"><span class="h-px flex-1 bg-line"></span>o con tu email<span class="h-px flex-1 bg-line"></span></p>
+          </div>
           <form class="mt-8 space-y-4" novalidate>
             ${campos}
             <p data-error role="alert" class="min-h-5 text-sm font-medium text-danger"></p>
@@ -40,6 +45,15 @@ function authPage(titulo: string, boton: string, endpoint: string, campos: strin
 
   const form = el.querySelector('form')!
   const error = el.querySelector<HTMLElement>('[data-error]')!
+  // El botón de GitHub solo aparece si el backend tiene las claves de la OAuth App
+  api<{ github: boolean }>('/auth/config').then(({ github }) => {
+    if (!github) return
+    el.querySelector<HTMLElement>('[data-github]')!.hidden = false
+    form.classList.replace('mt-8', 'mt-6')
+  }, () => {})
+  if (new URLSearchParams(location.search).get('error') === 'github') {
+    error.textContent = 'No se pudo entrar con GitHub. Inténtalo otra vez o entra con tu email.'
+  }
   const enviar = form.querySelector('button')!
   form.addEventListener('submit', async (e) => {
     e.preventDefault()

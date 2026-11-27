@@ -16,7 +16,7 @@ import { notasPage } from './pages/notas'
 import { retoPage, retosPage } from './pages/retos'
 import { createRouter, navigate, type Routes } from './router'
 import { cargarSesion, setUsuario, usuario } from './session'
-import { icono, type Icono } from './ui'
+import { avatar, icono, type Icono } from './ui'
 
 // Rutas de la SPA (ver docs/PLAN.md §7). Cada página es una función que devuelve un HTMLElement.
 const routes: Routes = {
@@ -88,7 +88,7 @@ function pintarRail() {
     </div>
     <div class="hidden border-t border-rail-2 p-4 lg:mt-auto lg:block">
       <div class="flex items-center gap-3">
-        <span aria-hidden="true" class="grid size-9 shrink-0 place-items-center rounded-full bg-rail-2 font-display font-extrabold text-white">${esc(u.nombre[0]?.toUpperCase())}</span>
+        ${u.avatarUrl ? avatar(u.nombre, 'size-9 text-base', u.avatarUrl) : `<span aria-hidden="true" class="grid size-9 shrink-0 place-items-center rounded-full bg-rail-2 font-display font-extrabold text-white">${esc(u.nombre[0]?.toUpperCase())}</span>`}
         <div class="min-w-0 flex-1">
           <a href="/clase/${u.id}" class="block truncate font-semibold text-white hover:underline">${esc(u.nombre)}</a>
           <p class="text-sm text-rail-muted">${ROL[u.rol]}</p>

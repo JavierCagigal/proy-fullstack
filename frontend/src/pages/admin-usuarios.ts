@@ -25,7 +25,7 @@ export async function adminUsuariosPage() {
             ${usuarios.map((u) => `
               <tr class="border-t border-line">
                 <td class="px-6 py-3.5 font-semibold">
-                  <span class="flex items-center gap-3">${avatar(u.nombre, 'size-8 text-sm')}${esc(u.nombre)}</span>
+                  <span class="flex items-center gap-3">${avatar(u.nombre, 'size-8 text-sm', u.avatarUrl)}${esc(u.nombre)}</span>
                 </td>
                 <td class="px-6 py-3.5 text-muted">${esc(u.email)}</td>
                 <td class="px-6 py-3.5">
