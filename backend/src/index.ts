@@ -1,4 +1,4 @@
-import app from './app'
+import app from './app.js'
 
 // En Vercel la app se exporta como función; en local escucha en un puerto.
 if (!process.env.VERCEL) {

@@ -1,6 +1,7 @@
-// Datos de demo. Contraseña de todos los usuarios: dawhub123
+// Datos de demo. Contraseña de todos los usuarios: SEED_PASSWORD, o dawhub123 en local.
+// En producción (repo público) usa otra: SEED_PASSWORD='...' npx prisma db seed
 import { hash } from 'bcryptjs'
-import { prisma } from '../src/db'
+import { prisma } from '../src/db.js'
 
 const day = (n: number) => new Date(Date.now() + n * 86_400_000)
 
@@ -13,7 +14,8 @@ async function main() {
   await prisma.recurso.deleteMany()
   await prisma.usuario.deleteMany()
 
-  const passwordHash = await hash('dawhub123', 10)
+  const password = process.env.SEED_PASSWORD ?? 'dawhub123'
+  const passwordHash = await hash(password, 10)
   const u = (nombre: string, email: string, rol: 'admin' | 'profesor' | 'alumno', githubUsername?: string) =>
     prisma.usuario.create({ data: { nombre, email, rol, passwordHash, githubUsername } })
 
@@ -100,7 +102,7 @@ async function main() {
     ],
   })
 
-  console.log('Seed OK. Usuarios: admin@dawhub.dev, ana@dawhub.dev, lucia@dawhub.dev… (contraseña: dawhub123)')
+  console.log(`Seed OK. Usuarios: admin@dawhub.dev, ana@dawhub.dev, lucia@dawhub.dev… (contraseña: ${process.env.SEED_PASSWORD ? 'la de SEED_PASSWORD' : password})`)
 }
 
 main().finally(() => prisma.$disconnect())
