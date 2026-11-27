@@ -18,7 +18,7 @@ Roles: `admin` (desarrolladores), `profesor` y `alumno`, en una sola columna enu
 ## Estilo
 - Nombres del dominio (modelos, campos, rutas de la API y de la SPA) en español, como en `docs/PLAN.md`. El resto del código, en inglés. Interfaz, commits y documentación, en español.
 - Frontend: cada página es una función que devuelve un `HTMLElement` (ver `frontend/src/pages/`). Usa `html()` para crear elementos y `esc()` para todo dato de usuario (evita XSS) y `api()` para llamar al backend.
-- Diseño: antes de tocar la interfaz, lee `frontend/PRODUCT.md` y `frontend/.impeccable/surfaces/src-main-ts.md` (el mundo "pegatinas del portátil"). Reutiliza los tokens y clases de `src/style.css` (`panel`, `btn`, `campo`, `sticker`, `prosa`) y las piezas de `src/ui.ts` (`pegatina()`, `chip()`, `icono()`, `cuando()`). Nada de emojis como iconos ni colores nuevos sueltos.
+- Diseño: antes de tocar la interfaz, lee `frontend/DESIGN.md` (sistema de diseño: tokens, reglas y componentes), `frontend/PRODUCT.md` y `frontend/.impeccable/surfaces/src-main-ts.md` (el mundo "pegatinas del portátil"). Reutiliza los tokens y clases de `src/style.css` (`panel`, `btn`, `campo`, `sticker`, `prosa`) y las piezas de `src/ui.ts` (`pegatina()`, `chip()`, `icono()`, `cuando()`). Nada de emojis como iconos ni colores nuevos sueltos.
 - Backend: los imports relativos llevan extensión `.js` (`./db.js`). Vercel ejecuta el backend como ESM sin bundler y sin ella falla en producción.
 - Lo más simple que funcione. Sin abstracciones "por si acaso" ni dependencias para lo que se hace en pocas líneas.
 - Nunca subir secretos: van en `.env` (ignorado). Mantener `.env.example` al día.
