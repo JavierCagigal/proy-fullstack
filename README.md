@@ -33,9 +33,7 @@ Si `prisma dev` da otro puerto, cópialo en `DATABASE_URL` y en `DIRECT_URL` del
 
 ### Despliegue (Supabase + Vercel)
 
-1. **Supabase**: crea un proyecto y copia sus dos cadenas de conexión (Connect → ORMs → Prisma). La del pooler (puerto 6543, con `?pgbouncer=true`) va en `DATABASE_URL`; la directa (puerto 5432), en `DIRECT_URL`. Para crear las tablas, desde `backend/` y con esas variables: `npx prisma migrate deploy && npx prisma db seed`.
-2. **Vercel – backend**: nuevo proyecto desde el repo, *Root Directory* `backend`, con las variables de `backend/.env.example`. Rama de producción: `master`.
-3. **Vercel – frontend**: nuevo proyecto desde el repo, *Root Directory* `frontend`. Pon la URL del backend en `frontend/vercel.json` (sustituye `URL-DEL-BACKEND`).
+Paso a paso, qué clave va en cada sitio y cómo se conecta todo: [`docs/despliegue.md`](docs/despliegue.md).
 
 ## 3. URLs de producción
 | Componente | URL |

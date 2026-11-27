@@ -1,6 +1,6 @@
 import cookieParser from 'cookie-parser'
 import express from 'express'
-import { prisma } from './db'
+import { prisma } from './db.js'
 
 const app = express()
 app.use(express.json())

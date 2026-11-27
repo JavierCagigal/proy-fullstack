@@ -18,10 +18,11 @@ Roles: `admin` (desarrolladores), `profesor` y `alumno`, en una sola columna enu
 ## Estilo
 - Nombres del dominio (modelos, campos, rutas de la API y de la SPA) en español, como en `docs/PLAN.md`. El resto del código, en inglés. Interfaz, commits y documentación, en español.
 - Frontend: cada página es una función que devuelve un `HTMLElement` (ver `frontend/src/pages/`). Usa `html()` para crear elementos y `esc()` para todo dato de usuario (evita XSS) y `api()` para llamar al backend.
+- Backend: los imports relativos llevan extensión `.js` (`./db.js`). Vercel ejecuta el backend como ESM sin bundler y sin ella falla en producción.
 - Lo más simple que funcione. Sin abstracciones "por si acaso" ni dependencias para lo que se hace en pocas líneas.
 - Nunca subir secretos: van en `.env` (ignorado). Mantener `.env.example` al día.
 
 ## Flujo de trabajo
-- Ramas: `test` es la de integración (por defecto) y `master` la de producción/presentación. Una rama por funcionalidad con PR a `test`. Nunca hacer push directo a `master`.
+- Ramas: `test` es la de integración (por defecto) y `master` la de producción/presentación. Una rama por cambio (`feat/…`, `fix/…`, `docs/…`, `chore/…`) con PR a `test`. Nunca hacer push directo a `master`.
 - Antes de dar algo por terminado: `npm test` y `npm run test:e2e` en verde.
 - Al terminar una tarea con IA, añadir una entrada en `docs/vibe-coding.md` (prompt clave, herramienta, qué salió bien y qué hubo que corregir).

@@ -3,6 +3,8 @@
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
+  // Vercel transpila archivo a archivo y Node ESM exige la extensión en los imports
+  importFileExtension = "js"
 }
 
 datasource db {

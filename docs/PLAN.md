@@ -99,7 +99,8 @@ Las reglas que la BD puede garantizar sola (únicos, enums, claves foráneas) va
 
 Detalles de despliegue:
 - **Mismo origen:** el `vercel.json` del frontend redirige `/api/*` al proyecto del backend. Así la cookie es "first-party" y no la bloquean Safari ni Chrome.
-- **Prisma + Supabase en Vercel (serverless):** en ejecución, la URL del pooler (puerto 6543, `pgbouncer=true`); en las migraciones, la conexión directa (puerto 5432).
+- **Prisma + Supabase en Vercel (serverless):** en ejecución, el *Transaction pooler* (puerto 6543); en las migraciones, el *Session pooler* (puerto 5432). Paso a paso en [`despliegue.md`](despliegue.md).
+- **Backend sin bundler:** Vercel transpila cada `.ts` por separado y Node lo ejecuta como ESM, así que los imports relativos del backend llevan **extensión `.js`** (`import { prisma } from './db.js'`).
 - **Supabase** pausa el proyecto tras 7 días sin actividad. Basta con entrar al panel. Comprobarlo el día antes de la demo.
 - Secretos en las variables de entorno de Vercel y en `.env` local, nunca en el repo. Mantener `.env.example` al día.
 
@@ -153,7 +154,9 @@ Cada uno hace los tests de su bloque. Los E2E se reparten por flujo.
 
 ## 10 bis. Flujo con Git
 
-- `test` es la rama por defecto. Cada funcionalidad va en su rama (`feat/auth`, `feat/retos`…) y se integra con un PR a `test`.
+- `test` es la rama por defecto. Cada cambio va en su rama y se integra con un PR a `test`.
+- Nombres de rama: `feat/<cosa>` (funcionalidad: `feat/auth`, `feat/recursos`, `feat/retos`…), `fix/<cosa>` (arreglo), `docs/<cosa>` (solo documentación) y `chore/<cosa>` (configuración, despliegue, dependencias). En minúsculas y con guiones.
+- Commits en español con el mismo prefijo: `feat: login y registro`, `fix: …`.
 - Vercel: **`master` = producción**; `test` y las ramas generan despliegues de preview para probar.
 - Antes de la exposición: PR `test` → `master`.
 
