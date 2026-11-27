@@ -1,4 +1,6 @@
-# DAWHub
+# Commit
+
+> Antes llamado DAWHub.
 
 Portal de clase para profesores y alumnos de informática: apuntes y archivos con control de visibilidad, notas, retos/hackathons, propuestas de proyectos, perfiles con GitHub, skills y ofertas de trabajo.
 

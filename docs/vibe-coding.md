@@ -59,3 +59,32 @@ Los ficheros de instrucciones usados son `AGENTS.md` (reglas comunes) y `CLAUDE.
 
 **Qué hubo que corregir:** dos E2E fallaban de forma intermitente: uno por una carrera entre el logout y la siguiente navegación, y otro porque dos registros en paralelo generaban el mismo email con `Date.now()`. Se corrigieron y se ejecutaron 3 veces seguidas en verde.
 
+
+---
+
+## 2026-11-27 · Javier · Claude Code (+ skill Impeccable) · Bloque B y diseño de toda la interfaz
+
+**Prompt (resumen):** "sigue con el bloque B, usa las skills de /impeccable para hacer toda la UI de la página web".
+
+**Proceso de diseño (Impeccable):**
+1. Entrevista de producto: uso principal en portátil, tono cercano (tuteando) y nombre. La IA propuso cuatro nombres (Forja, Aula.dev, Commit, Localhost) y el equipo eligió **Commit**. Queda en `frontend/PRODUCT.md`.
+2. La IA hizo una lista de 7 mundos visuales del entorno del alumno (libro de texto de FP, agenda, separadores, plano de metro, cartel suizo, pegatinas del portátil, grafo de git). La herramienta sorteó cuál construir para no caer en el diseño de siempre y propuso alternativas de un catálogo. En una página de decisión con bocetos HTML, el equipo eligió **"Pegatinas del portátil"**: cada asignatura es una pegatina troquelada con su color.
+3. Contrato de dirección en `frontend/.impeccable/surfaces/src-main-ts.md`, detector automático de errores de diseño y revisión final hecha por un agente independiente con capturas a 1440 y 390 px.
+
+**Resultado:** API del bloque B (asignaturas, temas, recursos con visibilidad, archivos con URLs firmadas, panel "Hoy") e interfaz rehecha: login, Hoy, Asignaturas, asignatura con temas y recursos, usuarios y 404.
+
+**Decisiones de la IA que conviene destacar:**
+- El color y las siglas de cada asignatura se calculan del id y del nombre (DWEC, DAW…), sin columnas nuevas en la BD.
+- La descarga de un archivo oculto responde 404, no 403, para no revelar que existe.
+- Markdown propio de ~50 líneas en vez de una librería: primero se escapa todo y solo se permiten enlaces `http(s)`. Tiene tests de XSS.
+- El borrado se confirma en dos pasos en el propio botón, sin `confirm()`.
+- Cada estado de visibilidad se distingue por la forma y no solo por el color (tachado, borde discontinuo), por accesibilidad.
+
+**Qué hubo que corregir:**
+- Al limpiar los nombres de archivo, la tilde se convertía en `_` (`versio_n`); lo cazó un test.
+- Dos pegatinas salían grises porque Tailwind v4 no genera las variables de tema que solo se usan en estilos en línea (`@theme static`).
+- La cabecera de la asignatura se aplastaba en móvil.
+- El botón de borrar en dos pasos no anunciaba la confirmación al lector de pantalla; lo descubrió un E2E.
+- La revisión final (un agente independiente, solo con capturas y el contrato) **rechazó las primeras capturas móviles**: la ventana de Chrome no baja de 500 px en macOS, así que "390 px" no era real. Rehechas con Playwright a tamaño exacto, salieron 9 problemas que antes no se veían: scroll horizontal en "Hoy", pegatinas apiladas que empujaban "Lo próximo" fuera de pantalla, "Salir" encima del menú, el discontinuo usado para dos estados distintos, un "0 días" en la cuenta atrás… Se corrigieron en dos rondas hasta el veredicto **ship**.
+- Al arreglar las pegatinas en móvil se introdujo un fallo de accesibilidad: un `aria-label` que no empezaba por el texto visible (WCAG 2.5.3). La segunda ronda lo cazó.
+- **Lección:** para comprobar el diseño en móvil, capturas con Playwright y `viewport` exacto, nunca redimensionando la ventana del navegador.

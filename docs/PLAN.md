@@ -1,4 +1,4 @@
-# DAWHub: plan del proyecto
+# Commit (antes DAWHub): plan del proyecto
 
 > Proyecto FullStack con Vibe Coding. Equipo: Javier, Miguel y Alejandro.
 > **Exposición: 11 de diciembre de 2026.**
@@ -138,7 +138,7 @@ Un único `package.json` raíz con **npm workspaces** para lanzar todo con `npm 
 |---|---|---|
 | A | Backend: auth, JWT, middleware de roles, OAuth GitHub, admin de usuarios | "Login, OAuth con GitHub y control de permisos" |
 | B | Frontend: router History API, componentes, layout; asignaturas/recursos con visibilidad y subida de archivos | "Una SPA sin framework + archivos con URLs firmadas" |
-| C | Evaluaciones + notas, retos/hackathons (equipos, entregas, votos), propuestas, ofertas | "Cómo funciona un hackathon en DAWHub" |
+| C | Evaluaciones + notas, retos/hackathons (equipos, entregas, votos), propuestas, ofertas | "Cómo funciona un hackathon en Commit" |
 
 Cada uno hace los tests de su bloque. Los E2E se reparten por flujo.
 
@@ -175,8 +175,10 @@ Cada uno hace los tests de su bloque. Los E2E se reparten por flujo.
 | Ramas | `test` (por defecto, donde se integra todo) y `master` (lo que se presenta) | Se trabaja en ramas de funcionalidad con PR a `test`; antes de la exposición, `test` → `master` |
 | BD local | `prisma dev` en vez de Docker | El equipo no tiene Docker; Prisma trae un Postgres local con un comando |
 | IA | Pendiente (ver abajo) | Necesita la API de un proveedor; decidir si merece la pena |
+| Nombre | **Commit** (27/11) | Lo que hace un programador cada día y el compromiso que se pide al alumno |
+| Diseño | Mundo "pegatinas del portátil": rail grafito, pegatinas troqueladas por asignatura, Bricolage Grotesque + Figtree | Elegido con la skill de diseño Impeccable entre 4 direcciones; ver `frontend/PRODUCT.md` y `frontend/.impeccable/surfaces/` |
 
-**Pendiente de decidir:** la funcionalidad con IA (§8) y el nombre definitivo (DAWHub es provisional).
+**Pendiente de decidir:** la funcionalidad con IA (§8).
 
 **Aclaración sobre la IA (pregunta del equipo: "¿los alumnos tendrían que usar su propia IA?"):**
 - Si la integramos, **los alumnos no necesitan nada**: la plataforma llama al modelo con **nuestra** clave de API, guardada en el backend. El coste lo pone la plataforma (con la capa gratuita de Gemini, 0 € para una clase) y se limita el número de mensajes por usuario.
@@ -201,7 +203,13 @@ Cada uno hace los tests de su bloque. Los E2E se reparten por flujo.
 - Frontend: `usuario()` (de `session.ts`) para ocultar botones según el rol, y `navigate('/ruta')` (de `router.ts`) para navegar desde código.
 - Tests de API: crea tus usuarios en el test (ver `backend/src/auth.test.ts`). En E2E, `entrar(page, email)` de `e2e/tests/helpers.ts` con los usuarios del seed.
 
+**Hecho (27/11, noche):**
+- Producción desplegada desde `master`: https://proy-fullstack.vercel.app (front) y https://proy-fullstack-api.vercel.app (API), con la función en `fra1` junto a la BD.
+- Nombre **Commit** y diseño completo de la interfaz (ver §11).
+- **Bloque B, rama `feat/recursos`:** asignaturas (lista, crear, editar, borrar), temas (crear, renombrar, borrar) y recursos (apunte en Markdown, vídeo, enlace, proyecto) con visibilidad: visible, oculto o programado (`visible` + `visible_desde`). El alumno y los demás profesores solo ven lo publicado; el profesor de la asignatura y el admin lo ven todo, con su estado. "Ver como alumno" para comprobarlo. Archivos en Supabase Storage con URL firmada de subida y de descarga (5 min), que respeta la visibilidad. `GET /api/panel` para "Hoy" (lo próximo, retos abiertos, últimos recursos). Markdown propio y seguro (`frontend/src/markdown.ts`). Tests: 9 de API (Storage simulado), 4 de front y 1 E2E del flujo profesor → alumno.
+
 **Siguiente:**
-1. ~~Desplegar~~ Hecho el 27/11: https://proy-fullstack.vercel.app (front) y https://proy-fullstack-api.vercel.app (API), con la BD de Supabase con tablas y seed. Falta poner `master` como rama de producción y `fra1` como región en Vercel, y hacer el PR `test` → `master`.
-2. Bloques B y C en paralelo (§9), en ramas `feat/…`.
-3. GitHub OAuth (§7 de `despliegue.md`: hacen falta 2 OAuth Apps).
+1. Storage en producción: crear el bucket `recursos` y las 2 variables (pasos en `despliegue.md` §7).
+2. Bloque C (§9): evaluaciones y notas, retos (equipos, entregas, votos), propuestas y ofertas. Cada página nueva se añade a `NAV` en `frontend/src/main.ts`.
+3. La clase (perfiles con GitHub y "tu portátil" con las pegatinas ganadas) y Skills (recursos con `tipo = skill`, sin tema).
+4. GitHub OAuth (§7 de `despliegue.md`: hacen falta 2 OAuth Apps).

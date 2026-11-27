@@ -3,32 +3,41 @@ import { esc, html } from '../html'
 import { usuario, type Rol, type Usuario } from '../session'
 
 const ROLES: Rol[] = ['alumno', 'profesor', 'admin']
+const COLOR_ROL: Record<Rol, string> = { alumno: 'var(--color-sky)', profesor: 'var(--color-lemon)', admin: 'var(--color-tomato)' }
 
 // Gestión de roles. El frontend solo oculta; quien protege es el backend (403 si no eres admin).
 export async function adminUsuariosPage() {
-  if (usuario()?.rol !== 'admin') return html(`<p class="text-red-600">Solo los administradores pueden gestionar usuarios.</p>`)
+  if (usuario()?.rol !== 'admin') return html(`<p class="panel p-6 font-medium">Solo los administradores pueden gestionar usuarios.</p>`)
 
   const usuarios = await api<Usuario[]>('/admin/usuarios')
+  const cuenta = (r: Rol) => usuarios.filter((u) => u.rol === r).length
   const el = html(`
-    <section class="space-y-4">
-      <h1 class="text-2xl font-bold">Usuarios</h1>
-      <p data-msg role="status" class="text-sm"></p>
-      <table class="w-full overflow-hidden rounded bg-white text-left text-sm shadow-sm">
-        <thead class="bg-slate-100"><tr><th class="p-2">Nombre</th><th class="p-2">Email</th><th class="p-2">Rol</th></tr></thead>
-        <tbody>
-          ${usuarios.map((u) => `
-            <tr class="border-t">
-              <td class="p-2">${esc(u.nombre)}</td>
-              <td class="p-2">${esc(u.email)}</td>
-              <td class="p-2">
-                <select data-id="${u.id}" aria-label="Rol de ${esc(u.nombre)}" class="rounded border px-2 py-1" ${u.id === usuario()!.id ? 'disabled' : ''}>
-                  ${ROLES.map((r) => `<option ${r === u.rol ? 'selected' : ''}>${r}</option>`).join('')}
-                </select>
-              </td>
-            </tr>`).join('')}
-        </tbody>
-      </table>
-    </section>`)
+    <div class="space-y-8">
+      <header>
+        <h1 class="font-display text-4xl font-extrabold tracking-tight">Usuarios</h1>
+        <p class="mt-2 text-lg text-muted">${cuenta('alumno')} alumnos, ${cuenta('profesor')} profesores y ${cuenta('admin')} admins. Quien se registra entra como alumno; aquí le cambias el rol.</p>
+      </header>
+      <p data-msg role="status" class="font-medium empty:hidden"></p>
+      <div class="panel overflow-x-auto">
+        <table class="w-full text-left">
+          <thead class="text-sm text-muted"><tr><th class="px-6 py-3 font-semibold">Nombre</th><th class="px-6 py-3 font-semibold">Email</th><th class="px-6 py-3 font-semibold">Rol</th></tr></thead>
+          <tbody>
+            ${usuarios.map((u) => `
+              <tr class="border-t border-line">
+                <td class="px-6 py-3.5 font-semibold">
+                  <span class="flex items-center gap-3"><span aria-hidden="true" data-avatar="${u.id}" class="grid size-8 place-items-center rounded-full border-2 border-white font-display font-extrabold shadow-[0_0_0_1px_#d9dde3]" style="background:${COLOR_ROL[u.rol]}">${esc(u.nombre[0]?.toUpperCase())}</span>${esc(u.nombre)}</span>
+                </td>
+                <td class="px-6 py-3.5 text-muted">${esc(u.email)}</td>
+                <td class="px-6 py-3.5">
+                  <select data-id="${u.id}" aria-label="Rol de ${esc(u.nombre)}" class="campo mt-0 w-36 py-1.5" ${u.id === usuario()!.id ? 'disabled title="No puedes cambiar tu propio rol"' : ''}>
+                    ${ROLES.map((r) => `<option ${r === u.rol ? 'selected' : ''}>${r}</option>`).join('')}
+                  </select>
+                </td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`)
 
   const msg = el.querySelector<HTMLElement>('[data-msg]')!
   el.addEventListener('change', async (e) => {
@@ -37,11 +46,12 @@ export async function adminUsuariosPage() {
     try {
       await api(`/admin/usuarios/${u.id}`, { method: 'PATCH', body: JSON.stringify({ rol: select.value }) })
       u.rol = select.value as Rol
-      msg.className = 'text-sm text-green-700'
+      el.querySelector<HTMLElement>(`[data-avatar="${u.id}"]`)!.style.background = COLOR_ROL[u.rol]
+      msg.className = 'font-medium text-ok'
       msg.textContent = `${u.nombre} ahora es ${u.rol}.`
     } catch (err) {
       select.value = u.rol
-      msg.className = 'text-sm text-red-600'
+      msg.className = 'font-medium text-danger'
       msg.textContent = (err as Error).message
     }
   })

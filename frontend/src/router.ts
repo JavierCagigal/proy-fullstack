@@ -32,17 +32,23 @@ export function createRouter(routes: Routes, notFound: Page, outlet: HTMLElement
     if (redirect && redirect !== location.pathname) history.replaceState(null, '', redirect)
     const found = match(routes, location.pathname)
     outlet.replaceChildren(await (found ? found.page(found.params) : notFound({})))
+    window.dispatchEvent(new Event('ruta')) // para marcar el enlace activo del menú
   }
 
   function navigate(path: string) {
-    if (path !== location.pathname + location.search) history.pushState(null, '', path)
+    if (path !== location.pathname + location.search) {
+      history.pushState(null, '', path)
+      window.scrollTo(0, 0)
+    }
     return render()
   }
 
   // Intercepta los clics en enlaces internos para no recargar la página
   document.addEventListener('click', (e) => {
     const a = (e.target as Element).closest?.('a')
-    if (!a || a.origin !== location.origin || a.target || e.metaKey || e.ctrlKey || e.shiftKey) return
+    if (!a || a.origin !== location.origin || a.target || a.hasAttribute('download') || e.metaKey || e.ctrlKey || e.shiftKey) return
+    if (a.hash && a.pathname === location.pathname) return // ancla en la misma página: que el navegador haga scroll
+    if (a.pathname.startsWith('/api/')) return // descargas: las sirve el backend
     e.preventDefault()
     navigate(a.pathname + a.search)
   })

@@ -1,26 +1,12 @@
-import { hash } from 'bcryptjs'
 import request from 'supertest'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import app from './app.js'
-import { prisma } from './db.js'
+import { PASSWORD, usuariosDeTest } from './test-helpers.js'
 
-// Usuarios propios de este test (se borran al final). Necesita la BD local en marcha.
-const DOMINIO = '@test-auth.dawhub'
-const PASSWORD = 'secreta123'
-let i = 0
-const email = (n: string) => `${n}-${Date.now()}-${i++}${DOMINIO}`
-
-const limpiar = () => prisma.usuario.deleteMany({ where: { email: { endsWith: DOMINIO } } })
+// Necesita la BD local en marcha. Los usuarios del test se borran al final.
+const { email, conSesion, limpiar } = usuariosDeTest('test-auth.dawhub')
 beforeAll(limpiar)
 afterAll(limpiar)
-
-/** Crea un usuario con ese rol y devuelve un agente con su sesión iniciada. */
-async function conSesion(rol: 'admin' | 'profesor' | 'alumno') {
-  const u = await prisma.usuario.create({ data: { nombre: rol, email: email(rol), rol, passwordHash: await hash(PASSWORD, 4) } })
-  const agent = request.agent(app)
-  await agent.post('/api/auth/login').send({ email: u.email, password: PASSWORD }).expect(200)
-  return { agent, u }
-}
 
 describe('registro y sesión', () => {
   it('registra como alumno aunque pida otro rol, y la cookie da acceso a /me', async () => {

@@ -3,7 +3,9 @@ import express, { type ErrorRequestHandler } from 'express'
 import { cargarUsuario } from './auth.js'
 import { prisma } from './db.js'
 import { adminRouter } from './routes/admin.js'
+import { asignaturasRouter } from './routes/asignaturas.js'
 import { authRouter } from './routes/auth.js'
+import { panelRouter } from './routes/panel.js'
 
 const app = express()
 app.use(express.json())
@@ -16,7 +18,7 @@ app.get('/api/health', async (_req, res) => {
   res.json({ api: true, db })
 })
 
-app.use('/api', authRouter, adminRouter)
+app.use('/api', authRouter, adminRouter, asignaturasRouter, panelRouter)
 
 app.use('/api', (_req, res) => {
   res.status(404).json({ error: 'Ruta no encontrada' })

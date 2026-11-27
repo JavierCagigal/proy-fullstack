@@ -4,7 +4,7 @@ import { entrar } from './helpers'
 test('sin sesión, cualquier ruta lleva al login', async ({ page }) => {
   await page.goto('/retos')
   await expect(page).toHaveURL('/login')
-  await expect(page.getByRole('heading', { name: 'Entrar' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Hola de nuevo' })).toBeVisible()
 })
 
 test('registro → entra como alumno, la sesión sobrevive a recargar y "Salir" la cierra', async ({ page }) => {
@@ -15,11 +15,12 @@ test('registro → entra como alumno, la sesión sobrevive a recargar y "Salir" 
   await page.getByRole('button', { name: 'Crear cuenta' }).click()
 
   await expect(page).toHaveURL('/')
-  await expect(page.getByRole('heading', { name: 'Hola, Alumna E2E' })).toBeVisible()
-  await expect(page.getByText('Alumna E2E · alumno')).toBeVisible()
+  const rail = page.getByRole('navigation', { name: 'Principal' })
+  await expect(rail.getByText('Alumna E2E')).toBeVisible()
+  await expect(rail.getByText('alumno', { exact: true })).toBeVisible()
 
   await page.reload()
-  await expect(page.getByRole('heading', { name: 'Hola, Alumna E2E' })).toBeVisible()
+  await expect(rail.getByText('Alumna E2E')).toBeVisible()
 
   await page.getByRole('button', { name: 'Salir' }).click()
   await expect(page).toHaveURL('/login')
