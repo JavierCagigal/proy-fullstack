@@ -22,6 +22,8 @@ export function usuariosDeTest(dominio: string) {
   /** Borra lo creado por los usuarios de este dominio (sus asignaturas arrastran temas y recursos). */
   async function limpiar() {
     const suyos = { endsWith: `@${dominio}` }
+    await prisma.reto.deleteMany({ where: { creadoPor: { email: suyos } } })
+    await prisma.oferta.deleteMany({ where: { autor: { email: suyos } } })
     await prisma.asignatura.deleteMany({ where: { profesor: { email: suyos } } })
     await prisma.recurso.deleteMany({ where: { autor: { email: suyos } } })
     await prisma.usuario.deleteMany({ where: { email: suyos } })

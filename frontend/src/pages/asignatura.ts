@@ -2,7 +2,7 @@ import { api } from '../api'
 import { esc, html } from '../html'
 import { markdown } from '../markdown'
 import { navigate, type Params } from '../router'
-import { fechaHora, cuando, icono, pegatina, tamano, type Icono } from '../ui'
+import { confirmado, cuando, fechaHora, fechaLocal, icono, pegatina, tamano, type Icono } from '../ui'
 
 type Tipo = 'apunte' | 'video' | 'enlace' | 'proyecto'
 type Recurso = {
@@ -56,7 +56,7 @@ export async function asignaturaPage({ id }: Params) {
     const b = (e.target as Element).closest<HTMLButtonElement>('button[data-accion]')
     if (!b) return
     const { accion, id: bid, tema } = b.dataset
-    if (b.dataset.confirmar && !armado(b)) return
+    if (b.dataset.confirmar && !confirmado(b)) return
     try {
       if (accion === 'editar-asignatura') alternar(el.querySelector('#form-asignatura')!)
       if (accion === 'renombrar-tema') alternar(el.querySelector(`#renombrar-${bid}`)!)
@@ -289,7 +289,7 @@ function recurso(r: Recurso, editable: boolean) {
 /** Formulario de crear o editar un recurso. Los campos de URL y Markdown aparecen según el tipo (con CSS :has). */
 function formRecurso(temaId: number, r?: Recurso) {
   const e = r ? estado(r) : 'visible'
-  const desde = r?.visibleDesde ? local(new Date(r.visibleDesde)) : ''
+  const desde = r?.visibleDesde ? fechaLocal(new Date(r.visibleDesde)) : ''
   const radio = (name: string, value: string, label: string, checked: boolean, extra = '') => `
     <label class="cursor-pointer">
       <input type="radio" name="${name}" value="${value}" ${checked ? 'checked' : ''} class="peer sr-only">
@@ -330,29 +330,8 @@ function formRecurso(temaId: number, r?: Recurso) {
     </form>`
 }
 
-/** Fecha en el formato de <input type="datetime-local">, en hora local. */
-const local = (d: Date) => new Date(d.getTime() - d.getTimezoneOffset() * 60_000).toISOString().slice(0, 16)
-
 /** Mostrar/ocultar un formulario y llevar el foco a su primer campo. */
 function alternar(form: HTMLElement) {
   form.hidden = !form.hidden
   if (!form.hidden) form.querySelector<HTMLInputElement>('input')?.focus()
-}
-
-/** Borrar en dos pasos: el primer clic pide confirmación en el propio botón (sin diálogos del navegador). */
-function armado(b: HTMLButtonElement) {
-  if (b.dataset.armado) return true
-  const antes = b.innerHTML
-  const etiqueta = b.getAttribute('aria-label')
-  b.dataset.armado = '1'
-  b.innerHTML = b.dataset.confirmar!
-  if (etiqueta) b.setAttribute('aria-label', b.dataset.confirmar!) // que el lector de pantalla también lo anuncie
-  b.classList.add('btn-peligro')
-  setTimeout(() => {
-    delete b.dataset.armado
-    b.innerHTML = antes
-    if (etiqueta) b.setAttribute('aria-label', etiqueta)
-    b.classList.remove('btn-peligro')
-  }, 4000)
-  return false
 }

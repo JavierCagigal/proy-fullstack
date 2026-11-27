@@ -88,3 +88,23 @@ Los ficheros de instrucciones usados son `AGENTS.md` (reglas comunes) y `CLAUDE.
 - La revisión final (un agente independiente, solo con capturas y el contrato) **rechazó las primeras capturas móviles**: la ventana de Chrome no baja de 500 px en macOS, así que "390 px" no era real. Rehechas con Playwright a tamaño exacto, salieron 9 problemas que antes no se veían: scroll horizontal en "Hoy", pegatinas apiladas que empujaban "Lo próximo" fuera de pantalla, "Salir" encima del menú, el discontinuo usado para dos estados distintos, un "0 días" en la cuenta atrás… Se corrigieron en dos rondas hasta el veredicto **ship**.
 - Al arreglar las pegatinas en móvil se introdujo un fallo de accesibilidad: un `aria-label` que no empezaba por el texto visible (WCAG 2.5.3). La segunda ronda lo cazó.
 - **Lección:** para comprobar el diseño en móvil, capturas con Playwright y `viewport` exacto, nunca redimensionando la ventana del navegador.
+
+---
+
+## 2026-11-28 · Javier · Claude Code · Bloque C (notas, retos, propuestas, ofertas)
+
+**Prompt (resumen):** "sigue con el bloque C".
+
+**Resultado:** calendario, notas (vista del alumno con media ponderada y cuaderno del profesor que guarda al salir de cada casilla), retos/hackathons (equipos, entrega de repo y demo, votos), propuestas y ofertas con aprobación, y borrado de usuarios para el admin. Todo con el mismo sistema de diseño (`frontend/DESIGN.md`), sin inventar estilos nuevos. 25 tests de API y 10 E2E.
+
+**Decisiones de la IA que conviene destacar:**
+- Las reglas del hackathon se reparten entre la BD (UNIQUE: un equipo y un voto por reto) y la API (no votarte a ti mismo, solo equipos que han entregado, límite de miembros). Un intento duplicado se convierte en un 409 claro, sin comprobar antes en la aplicación.
+- Los votos no se muestran a la clase hasta que cierra el reto, para no influir en la votación.
+- Borrar a un profesor con asignaturas da 409 en vez de borrar en cascada su contenido.
+- La pegatina "¡Estás dentro!" solo se anima al unirte a un equipo, que es el momento firmado del diseño.
+
+**Qué hubo que corregir:**
+- Prisma no admite `retoId` en la creación anidada de un miembro con clave compuesta; se pasó a una transacción.
+- `prisma dev` (PGlite) cortaba conexiones con tests en paralelo: se pusieron en serie.
+- Tres E2E fallaban por los propios tests: `name: 'Salir'` encontraba también "Salir del equipo"; `selectOption` lanzaba `change` aunque el valor no cambiara, y la app recargaba el cuaderno (arreglado en la app); y una nota igual a la que ya había no disparaba `change` (el test usa ahora un valor distinto en cada ejecución).
+- El test de registro creaba un usuario nuevo en cada ejecución y nunca lo borraba. Ahora el admin puede borrar usuarios y el test borra el suyo al final.

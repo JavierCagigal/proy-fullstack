@@ -1,5 +1,6 @@
 import { api } from '../api'
 import { esc, html } from '../html'
+import { confirmado, icono } from '../ui'
 import { usuario, type Rol, type Usuario } from '../session'
 
 const ROLES: Rol[] = ['alumno', 'profesor', 'admin']
@@ -20,7 +21,7 @@ export async function adminUsuariosPage() {
       <p data-msg role="status" class="font-medium empty:hidden"></p>
       <div class="panel overflow-x-auto">
         <table class="w-full text-left">
-          <thead class="text-sm text-muted"><tr><th class="px-6 py-3 font-semibold">Nombre</th><th class="px-6 py-3 font-semibold">Email</th><th class="px-6 py-3 font-semibold">Rol</th></tr></thead>
+          <thead class="text-sm text-muted"><tr><th class="px-6 py-3 font-semibold">Nombre</th><th class="px-6 py-3 font-semibold">Email</th><th class="px-6 py-3 font-semibold">Rol</th><th class="px-6 py-3"><span class="sr-only">Acciones</span></th></tr></thead>
           <tbody>
             ${usuarios.map((u) => `
               <tr class="border-t border-line">
@@ -33,6 +34,9 @@ export async function adminUsuariosPage() {
                     ${ROLES.map((r) => `<option ${r === u.rol ? 'selected' : ''}>${r}</option>`).join('')}
                   </select>
                 </td>
+                <td class="px-6 py-3.5 text-right">
+                  ${u.id === usuario()!.id ? '' : `<button data-borrar="${u.id}" data-confirmar="¿Borrar a ${esc(u.nombre)}?" class="btn btn-texto" aria-label="Borrar a ${esc(u.nombre)}">${icono('borrar', 'size-4')}</button>`}
+                </td>
               </tr>`).join('')}
           </tbody>
         </table>
@@ -40,6 +44,20 @@ export async function adminUsuariosPage() {
     </div>`)
 
   const msg = el.querySelector<HTMLElement>('[data-msg]')!
+  el.addEventListener('click', async (e) => {
+    const b = (e.target as Element).closest<HTMLButtonElement>('[data-borrar]')
+    if (!b || !confirmado(b)) return
+    const u = usuarios.find((x) => x.id === Number(b.dataset.borrar))!
+    try {
+      await api(`/admin/usuarios/${u.id}`, { method: 'DELETE' })
+      b.closest('tr')!.remove()
+      msg.className = 'font-medium text-ok'
+      msg.textContent = `${u.nombre} se ha borrado.`
+    } catch (err) {
+      msg.className = 'font-medium text-danger'
+      msg.textContent = (err as Error).message
+    }
+  })
   el.addEventListener('change', async (e) => {
     const select = e.target as HTMLSelectElement
     const u = usuarios.find((x) => x.id === Number(select.dataset.id))!

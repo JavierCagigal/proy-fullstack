@@ -22,3 +22,21 @@ adminRouter.patch('/admin/usuarios/:id', async (req, res) => {
   }
   res.json(await prisma.usuario.update({ where: { id }, data: { rol }, select: usuarioPublico }))
 })
+
+adminRouter.delete('/admin/usuarios/:id', async (req, res) => {
+  const id = Number(req.params.id)
+  if (id === req.usuario!.id) return void res.status(400).json({ error: 'No puedes borrarte a ti mismo' })
+  if (!Number.isInteger(id) || !(await prisma.usuario.findUnique({ where: { id } }))) {
+    return void res.status(404).json({ error: 'Usuario no encontrado' })
+  }
+  try {
+    await prisma.usuario.delete({ where: { id } }) // sus notas, equipos, votos y propuestas caen en cascada
+  } catch (e) {
+    // La BD no deja borrar a quien tiene asignaturas, recursos o retos a su nombre (P2003: clave foránea)
+    if ((e as { code?: string }).code === 'P2003') {
+      return void res.status(409).json({ error: 'Tiene asignaturas, recursos o retos a su nombre: pásalos a otro profesor antes de borrarlo' })
+    }
+    throw e
+  }
+  res.status(204).end()
+})

@@ -5,7 +5,10 @@ import { prisma } from './db.js'
 import { adminRouter } from './routes/admin.js'
 import { asignaturasRouter } from './routes/asignaturas.js'
 import { authRouter } from './routes/auth.js'
+import { comunidadRouter } from './routes/comunidad.js'
+import { evaluacionesRouter } from './routes/evaluaciones.js'
 import { panelRouter } from './routes/panel.js'
+import { retosRouter } from './routes/retos.js'
 
 const app = express()
 app.use(express.json())
@@ -18,7 +21,7 @@ app.get('/api/health', async (_req, res) => {
   res.json({ api: true, db })
 })
 
-app.use('/api', authRouter, adminRouter, asignaturasRouter, panelRouter)
+app.use('/api', authRouter, adminRouter, asignaturasRouter, panelRouter, evaluacionesRouter, retosRouter, comunidadRouter)
 
 app.use('/api', (_req, res) => {
   res.status(404).json({ error: 'Ruta no encontrada' })
