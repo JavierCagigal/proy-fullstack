@@ -29,7 +29,7 @@ test('el profesor publica un recurso visible y otro oculto; el alumno solo ve el
   const url = page.url()
 
   // El alumno ve el tema con el visible (y su Markdown), pero no el oculto
-  await page.getByRole('button', { name: 'Salir' }).click()
+  await page.getByRole('button', { name: 'Salir', exact: true }).click()
   await expect(page).toHaveURL('/login')
   await entrar(page, 'lucia@dawhub.dev')
   await page.goto(url)
@@ -40,7 +40,7 @@ test('el profesor publica un recurso visible y otro oculto; el alumno solo ve el
   await expect(comoAlumno.getByRole('button', { name: 'Añadir recurso' })).toHaveCount(0)
 
   // Limpieza: el profesor borra el tema (borrado en dos pasos)
-  await page.getByRole('button', { name: 'Salir' }).click()
+  await page.getByRole('button', { name: 'Salir', exact: true }).click()
   await expect(page).toHaveURL('/login')
   await entrar(page, 'ana@dawhub.dev')
   await page.goto(url)

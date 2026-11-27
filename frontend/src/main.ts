@@ -6,9 +6,13 @@ import { esc, html } from './html'
 import { adminUsuariosPage } from './pages/admin-usuarios'
 import { asignaturaPage } from './pages/asignatura'
 import { asignaturasPage } from './pages/asignaturas'
+import { calendarioPage } from './pages/calendario'
+import { ofertasPage, propuestasPage } from './pages/comunidad'
 import { loginPage, registroPage } from './pages/auth'
 import { homePage } from './pages/home'
 import { notFoundPage } from './pages/not-found'
+import { notasPage } from './pages/notas'
+import { retoPage, retosPage } from './pages/retos'
 import { createRouter, navigate, type Routes } from './router'
 import { cargarSesion, setUsuario, usuario } from './session'
 import { icono, type Icono } from './ui'
@@ -20,6 +24,12 @@ const routes: Routes = {
   '/registro': registroPage,
   '/asignaturas': asignaturasPage,
   '/asignaturas/:id': asignaturaPage,
+  '/calendario': calendarioPage,
+  '/notas': notasPage,
+  '/retos': retosPage,
+  '/retos/:id': retoPage,
+  '/propuestas': propuestasPage,
+  '/ofertas': ofertasPage,
   '/admin/usuarios': adminUsuariosPage,
 }
 
@@ -34,6 +44,11 @@ const guard = (path: string) => {
 const NAV: [string, string, Icono][] = [
   ['/', 'Hoy', 'hoy'],
   ['/asignaturas', 'Asignaturas', 'asignaturas'],
+  ['/calendario', 'Calendario', 'calendario'],
+  ['/notas', 'Notas', 'notas'],
+  ['/retos', 'Retos', 'retos'],
+  ['/propuestas', 'Propuestas', 'propuestas'],
+  ['/ofertas', 'Ofertas', 'ofertas'],
 ]
 
 const ROL = { admin: 'admin', profesor: 'profesor', alumno: 'alumno' }

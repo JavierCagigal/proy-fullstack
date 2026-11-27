@@ -33,7 +33,7 @@ export async function homePage() {
 
       <div class="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
         <section class="panel p-6" aria-labelledby="proximo">
-          <h2 id="proximo" class="font-display text-xl font-extrabold">Lo próximo</h2>
+          <div class="flex items-baseline justify-between gap-4"><h2 id="proximo" class="font-display text-xl font-extrabold">Lo próximo</h2><a href="/calendario" class="text-sm font-semibold text-muted hover:text-ink">Calendario</a></div>
           ${panel.proximas.length ? `
             <ul class="mt-3">
               ${panel.proximas.map((e) => `
@@ -94,12 +94,13 @@ function retoActivo(reto: Panel['retos'][number]) {
   return `
     <section class="relative rounded-[14px] bg-ink p-6 text-white" aria-labelledby="reto">
       ${equipo ? '<span class="sticker absolute -top-3.5 right-5 rotate-6 bg-mint px-3 py-1.5 text-sm">¡Estás dentro!</span>' : ''}
-      <h2 id="reto" class="font-display text-2xl font-extrabold leading-tight">${esc(reto.titulo)}</h2>
+      <h2 id="reto" class="font-display text-2xl font-extrabold leading-tight"><a href="/retos/${reto.id}" class="hover:underline">${esc(reto.titulo)}</a></h2>
       <p class="mt-2 font-semibold text-lemon">Abierto hasta el ${fechaCorta(reto.fin)}</p>
       <p class="mt-1 text-rail-text">${equipo ? `Tu equipo: <b class="text-white">${esc(equipo.nombre)}</b> · ${equipo._count.miembros}/${reto.maxMiembros}` : 'Todavía no tienes equipo.'}</p>
       <dl class="mt-5 grid grid-cols-3 gap-2.5 text-center">
         ${[...tiempo, [reto._count.equipos, 'equipos']].map(([n, l]) => `
           <div class="flex flex-col-reverse rounded-[10px] bg-rail py-2.5"><dt class="text-xs text-rail-muted">${l}</dt><dd class="tabular font-display text-2xl font-extrabold">${n}</dd></div>`).join('')}
       </dl>
+      <a href="/retos/${reto.id}" class="btn mt-5 w-full bg-white text-ink hover:bg-ground">${equipo ? 'Ir a tu equipo' : 'Ver el reto y unirme'}</a>
     </section>`
 }

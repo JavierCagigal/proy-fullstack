@@ -38,7 +38,7 @@ async function main() {
   const luis = await u('Luis Profesor', 'luis@dawhub.dev', 'profesor')
   const alumnos = await Promise.all(
     ['Lucía', 'Pablo', 'Marta', 'Diego', 'Sara', 'Hugo'].map((n) =>
-      u(n, `${n.toLowerCase().normalize('NFD').replace(/\p{M}/gu, '')}@dawhub.dev`, 'alumno', `${n.toLowerCase()}-dev`),
+      u(n, `${n.toLowerCase().normalize('NFD').replace(/\p{M}/gu, '')}@dawhub.dev`, 'alumno', `${n.toLowerCase().normalize('NFD').replace(/\p{M}/gu, '')}-dev`),
     ),
   )
 

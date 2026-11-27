@@ -5,6 +5,7 @@ import { requireRol, type UsuarioSesion } from '../auth.js'
 import { prisma } from '../db.js'
 import type { Prisma } from '../generated/prisma/client.js'
 import { borrarArchivo, urlDeDescarga, urlDeSubida } from '../storage.js'
+import { esUrl, idDe, texto } from '../validar.js'
 
 export const asignaturasRouter = Router()
 asignaturasRouter.use(['/asignaturas', '/temas', '/recursos'], requireRol())
@@ -18,11 +19,8 @@ const estaPublicado = (r: { visible: boolean; visibleDesde: Date | null }) =>
   r.visible && (!r.visibleDesde || r.visibleDesde <= new Date())
 
 /** El profesor de la asignatura o un admin. Otro profesor solo ve lo publicado, como un alumno. */
-const puedeEditar = (u: UsuarioSesion, profesorId: number) => u.rol === 'admin' || u.id === profesorId
+export const puedeEditar = (u: UsuarioSesion, profesorId: number) => u.rol === 'admin' || u.id === profesorId
 
-const texto = (v: unknown) => String(v ?? '').trim()
-/** Id de la URL; si no es un número, uno que no existe (→ 404 en vez de un error de Prisma). */
-const idDe = (v: string) => (/^\d+$/.test(v) ? Number(v) : -1)
 
 const recursoPublico = {
   id: true, tipo: true, titulo: true, contenidoMd: true, url: true,
@@ -159,7 +157,7 @@ function datosRecurso(body: any, crear: boolean): Prisma.RecursoUncheckedUpdateI
   }
   if (body?.url !== undefined) {
     const url = texto(body.url)
-    if (url && !/^https?:\/\/\S+$/i.test(url)) return 'El enlace tiene que empezar por http:// o https://'
+    if (url && !esUrl(url)) return 'El enlace tiene que empezar por http:// o https://'
     data.url = url || null
   }
   if (crear && ['video', 'enlace'].includes(body?.tipo) && !data.url) return 'Un vídeo o un enlace necesita su URL'

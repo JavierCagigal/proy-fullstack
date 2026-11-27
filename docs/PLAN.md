@@ -208,8 +208,17 @@ Cada uno hace los tests de su bloque. Los E2E se reparten por flujo.
 - Nombre **Commit** y diseño completo de la interfaz (ver §11).
 - **Bloque B, rama `feat/recursos`:** asignaturas (lista, crear, editar, borrar), temas (crear, renombrar, borrar) y recursos (apunte en Markdown, vídeo, enlace, proyecto) con visibilidad: visible, oculto o programado (`visible` + `visible_desde`). El alumno y los demás profesores solo ven lo publicado; el profesor de la asignatura y el admin lo ven todo, con su estado. "Ver como alumno" para comprobarlo. Archivos en Supabase Storage con URL firmada de subida y de descarga (5 min), que respeta la visibilidad. `GET /api/panel` para "Hoy" (lo próximo, retos abiertos, últimos recursos). Markdown propio y seguro (`frontend/src/markdown.ts`). Tests: 9 de API (Storage simulado), 4 de front y 1 E2E del flujo profesor → alumno.
 
+**Hecho (28/11): Bloque C, rama `feat/bloque-c`:**
+- **Calendario** (`/calendario`): exámenes, entregas y cierres de retos por mes, con lo pasado plegado.
+- **Notas** (`/notas`): el alumno ve las suyas con la media ponderada por peso. El profesor (o el admin) tiene un cuaderno por asignatura (alumnos × evaluaciones) donde la nota se guarda al salir de la casilla, y crea o borra evaluaciones.
+- **Retos** (`/retos`, `/retos/:id`): el profesor los publica. Los alumnos crean un equipo o se unen (un equipo por reto, con límite de miembros) y entregan repo y demo mientras el reto está abierto. Votan a equipos que han entregado, nunca al suyo, con un voto por reto que se puede cambiar. La clase ve los votos al cerrarse; el profesor, siempre.
+- **Propuestas** (`/propuestas`): cualquiera propone; la gente se apunta con "Me interesa" y el profesor aprueba o descarta.
+- **Ofertas** (`/ofertas`): la de un alumno queda pendiente hasta que la aprueba un profesor.
+- El admin puede **borrar usuarios**, salvo a sí mismo o a quien tenga asignaturas, recursos o retos a su nombre (409).
+- Tests: 25 de API y 10 E2E. Como `prisma dev` no aguanta bien conexiones en paralelo, los tests van en serie: Vitest con `fileParallelism: false` y Playwright con `workers: 1`.
+
 **Siguiente:**
 1. Storage en producción: crear el bucket `recursos` y las 2 variables (pasos en `despliegue.md` §7).
-2. Bloque C (§9): evaluaciones y notas, retos (equipos, entregas, votos), propuestas y ofertas. Cada página nueva se añade a `NAV` en `frontend/src/main.ts`.
-3. La clase (perfiles con GitHub y "tu portátil" con las pegatinas ganadas) y Skills (recursos con `tipo = skill`, sin tema).
-4. GitHub OAuth (§7 de `despliegue.md`: hacen falta 2 OAuth Apps).
+2. La clase (`/clase`, perfiles con GitHub y "tu portátil" con las pegatinas ganadas) y Skills (`/skills`: recursos con `tipo = skill`, sin tema).
+3. GitHub OAuth (§7 de `despliegue.md`: hacen falta 2 OAuth Apps).
+4. Volver a ejecutar el seed en Supabase y hacer el PR `test` → `master`.

@@ -1,6 +1,7 @@
 import request from 'supertest'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import app from './app.js'
+import { prisma } from './db.js'
 import { PASSWORD, usuariosDeTest } from './test-helpers.js'
 
 // Necesita la BD local en marcha. Los usuarios del test se borran al final.
@@ -74,6 +75,19 @@ describe('admin de usuarios (requireRol)', () => {
     const res = await admin.patch(`/api/admin/usuarios/${u.id}`).send({ rol: 'profesor' }).expect(200)
     expect(res.body.rol).toBe('profesor')
     expect((await alumno.get('/api/me')).body.rol).toBe('profesor')
+  })
+
+  it('el admin borra usuarios, pero no a sí mismo ni a quien tiene asignaturas', async () => {
+    const { agent: admin, u: yo } = await conSesion('admin')
+    const { agent: alumno, u } = await conSesion('alumno')
+    const { u: profe } = await conSesion('profesor')
+    await prisma.asignatura.create({ data: { nombre: 'De test', curso: '1º', profesorId: profe.id } })
+
+    await alumno.delete(`/api/admin/usuarios/${u.id}`).expect(403)
+    await admin.delete(`/api/admin/usuarios/${yo.id}`).expect(400)
+    await admin.delete(`/api/admin/usuarios/${profe.id}`).expect(409)
+    await admin.delete(`/api/admin/usuarios/${u.id}`).expect(204)
+    await alumno.get('/api/me').expect(401) // su sesión ya no vale
   })
 })
 
