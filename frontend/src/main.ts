@@ -6,8 +6,9 @@ import { esc, html } from './html'
 import { adminUsuariosPage } from './pages/admin-usuarios'
 import { asignaturaPage } from './pages/asignatura'
 import { asignaturasPage } from './pages/asignaturas'
+import { clasePage, perfilPage } from './pages/clase'
 import { calendarioPage } from './pages/calendario'
-import { ofertasPage, propuestasPage } from './pages/comunidad'
+import { ofertasPage, propuestasPage, skillsPage } from './pages/comunidad'
 import { loginPage, registroPage } from './pages/auth'
 import { homePage } from './pages/home'
 import { notFoundPage } from './pages/not-found'
@@ -30,6 +31,9 @@ const routes: Routes = {
   '/retos/:id': retoPage,
   '/propuestas': propuestasPage,
   '/ofertas': ofertasPage,
+  '/clase': clasePage,
+  '/clase/:id': perfilPage,
+  '/skills': skillsPage,
   '/admin/usuarios': adminUsuariosPage,
 }
 
@@ -48,6 +52,8 @@ const NAV: [string, string, Icono][] = [
   ['/notas', 'Notas', 'notas'],
   ['/retos', 'Retos', 'retos'],
   ['/propuestas', 'Propuestas', 'propuestas'],
+  ['/clase', 'La clase', 'usuarios'],
+  ['/skills', 'Skills', 'skills'],
   ['/ofertas', 'Ofertas', 'ofertas'],
 ]
 
@@ -82,9 +88,9 @@ function pintarRail() {
     </div>
     <div class="hidden border-t border-rail-2 p-4 lg:mt-auto lg:block">
       <div class="flex items-center gap-3">
-        <span aria-hidden="true" class="grid size-9 shrink-0 place-items-center rounded-full bg-mint font-display font-extrabold text-ink">${esc(u.nombre[0]?.toUpperCase())}</span>
+        <span aria-hidden="true" class="grid size-9 shrink-0 place-items-center rounded-full bg-rail-2 font-display font-extrabold text-white">${esc(u.nombre[0]?.toUpperCase())}</span>
         <div class="min-w-0 flex-1">
-          <p class="truncate font-semibold text-white">${esc(u.nombre)}</p>
+          <a href="/clase/${u.id}" class="block truncate font-semibold text-white hover:underline">${esc(u.nombre)}</a>
           <p class="text-sm text-rail-muted">${ROL[u.rol]}</p>
         </div>
         <button data-logout class="rounded-lg p-2 text-rail-muted hover:bg-rail-2 hover:text-white" aria-label="Salir">${icono('salir')}</button>
@@ -108,8 +114,8 @@ function marcarActivo() {
 function comprobarSalud() {
   const p = rail.querySelector<HTMLElement>('[data-salud]')!
   api<{ db: boolean }>('/health').then(
-    (h) => (p.innerHTML = h.db ? '<span class="size-2 rounded-full bg-mint"></span>API y BD conectadas' : '<span class="size-2 rounded-full bg-tomato"></span>La BD no responde'),
-    () => (p.innerHTML = '<span class="size-2 rounded-full bg-tomato"></span>La API no responde'),
+    (h) => (p.innerHTML = h.db ? '<span class="size-2 rounded-full bg-[#3fb68b]"></span>API y BD conectadas' : '<span class="size-2 rounded-full bg-danger"></span>La BD no responde'),
+    () => (p.innerHTML = '<span class="size-2 rounded-full bg-danger"></span>La API no responde'),
   )
 }
 

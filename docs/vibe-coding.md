@@ -108,3 +108,18 @@ Los ficheros de instrucciones usados son `AGENTS.md` (reglas comunes) y `CLAUDE.
 - `prisma dev` (PGlite) cortaba conexiones con tests en paralelo: se pusieron en serie.
 - Tres E2E fallaban por los propios tests: `name: 'Salir'` encontraba también "Salir del equipo"; `selectOption` lanzaba `change` aunque el valor no cambiara, y la app recargaba el cuaderno (arreglado en la app); y una nota igual a la que ya había no disparaba `change` (el test usa ahora un valor distinto en cada ejecución).
 - El test de registro creaba un usuario nuevo en cada ejecución y nunca lo borraba. Ahora el admin puede borrar usuarios y el test borra el suyo al final.
+
+---
+
+## 2026-11-28 · Javier · Claude Code · La clase y Skills
+
+**Prompt (resumen):** "sigue con la clase y skills".
+
+**Resultado:** "La clase" con un portátil por persona, en el que las pegatinas son las asignaturas que imparte, sus retos y las tecnologías de sus propuestas. Perfil editable (nombre, GitHub, bio) y Skills por categoría con aprobación del profesor. 29 tests de API y 12 E2E.
+
+**Decisiones de la IA que conviene destacar:**
+- La revisión de diseño anterior señaló que "la tapa del portátil" solo salía en el login. Ahora es la identidad de cada perfil, y las pegatinas se ganan con datos reales: nada de logros inventados.
+- Las pegatinas libres (tecnologías, retos, categorías) derivan su color, giro y troquel del propio texto: "Node" es siempre la misma pegatina en toda la web.
+- Las skills reutilizan la tabla `recursos` (`tipo = skill`, sin tema), como decía el plan, y `visible` hace de "aprobada". No hizo falta migración.
+- La clase nunca devuelve emails ni admins, y el nombre de usuario de GitHub se valida con su formato real.
+- Los avatares pasan a ser neutros, porque el documentador de diseño avisó de que usaban colores de pegatina.

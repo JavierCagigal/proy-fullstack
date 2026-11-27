@@ -217,8 +217,14 @@ Cada uno hace los tests de su bloque. Los E2E se reparten por flujo.
 - El admin puede **borrar usuarios**, salvo a sí mismo o a quien tenga asignaturas, recursos o retos a su nombre (409).
 - Tests: 25 de API y 10 E2E. Como `prisma dev` no aguanta bien conexiones en paralelo, los tests van en serie: Vitest con `fileParallelism: false` y Playwright con `workers: 1`.
 
+**Hecho (28/11): La clase y Skills, rama `feat/clase-skills`:**
+- **La clase** (`/clase`, `/clase/:id`): profesores y alumnos (sin admins ni emails), cada uno con "su portátil". Las pegatinas son las asignaturas que imparte, los retos en los que ha participado y las tecnologías de sus propuestas. El perfil enseña GitHub, bio, proyectos en retos (repo y demo) y propuestas. Cada uno edita el suyo (`PATCH /api/me`: nombre, GitHub con formato válido y bio de 280 caracteres como máximo), y el nombre del menú lleva a tu perfil.
+- **Skills** (`/skills`): enlaces por categoría (frontend, backend, bases de datos, devops, ia, diseño, herramientas), cada una con su pegatina. Son recursos sin tema (`tipo = skill`). La de un alumno queda oculta hasta que la aprueba un profesor.
+- Avatares neutros: el color saturado es solo de las pegatinas (regla de DESIGN.md).
+- Tests: 29 de API y 12 E2E.
+
 **Siguiente:**
 1. Storage en producción: crear el bucket `recursos` y las 2 variables (pasos en `despliegue.md` §7).
-2. La clase (`/clase`, perfiles con GitHub y "tu portátil" con las pegatinas ganadas) y Skills (`/skills`: recursos con `tipo = skill`, sin tema).
-3. GitHub OAuth (§7 de `despliegue.md`: hacen falta 2 OAuth Apps).
-4. Volver a ejecutar el seed en Supabase y hacer el PR `test` → `master`.
+2. GitHub OAuth (§7 de `despliegue.md`: hacen falta 2 OAuth Apps). Al entrar con GitHub se rellenan `githubUsername` y `avatarUrl`.
+3. Volver a ejecutar el seed en Supabase y hacer el PR `test` → `master`.
+4. Decidir si se hace la funcionalidad con IA (§8).

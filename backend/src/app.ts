@@ -5,6 +5,7 @@ import { prisma } from './db.js'
 import { adminRouter } from './routes/admin.js'
 import { asignaturasRouter } from './routes/asignaturas.js'
 import { authRouter } from './routes/auth.js'
+import { claseRouter } from './routes/clase.js'
 import { comunidadRouter } from './routes/comunidad.js'
 import { evaluacionesRouter } from './routes/evaluaciones.js'
 import { panelRouter } from './routes/panel.js'
@@ -21,7 +22,7 @@ app.get('/api/health', async (_req, res) => {
   res.json({ api: true, db })
 })
 
-app.use('/api', authRouter, adminRouter, asignaturasRouter, panelRouter, evaluacionesRouter, retosRouter, comunidadRouter)
+app.use('/api', authRouter, adminRouter, asignaturasRouter, panelRouter, evaluacionesRouter, retosRouter, comunidadRouter, claseRouter)
 
 app.use('/api', (_req, res) => {
   res.status(404).json({ error: 'Ruta no encontrada' })

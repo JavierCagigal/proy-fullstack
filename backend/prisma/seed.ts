@@ -42,6 +42,10 @@ async function main() {
     ),
   )
 
+  // Bios para que "La clase" tenga algo que enseñar
+  const bios = ['Frontend y accesibilidad. Siempre con el inspector abierto.', 'Me pierdo en las bases de datos (para bien).', 'Diseño primero, código después.', 'Backend, APIs y café.', 'Aprendiendo DevOps a base de romper cosas.', 'Videojuegos en mis ratos libres.']
+  await Promise.all(alumnos.map((a, i) => prisma.usuario.update({ where: { id: a.id }, data: { bio: bios[i] } })))
+
   const dwec = await prisma.asignatura.create({
     data: {
       nombre: 'Desarrollo Web en Entorno Cliente', curso: '2º DAW', profesorId: ana.id,
@@ -121,6 +125,12 @@ async function main() {
     data: [
       { tipo: 'skill', categoria: 'frontend', titulo: 'roadmap.sh Frontend', url: 'https://roadmap.sh/frontend', visible: true, autorId: ana.id },
       { tipo: 'skill', categoria: 'devops', titulo: 'Docker para principiantes', url: 'https://docs.docker.com/get-started/', visible: true, autorId: luis.id },
+      { tipo: 'skill', categoria: 'backend', titulo: 'roadmap.sh Backend', url: 'https://roadmap.sh/backend', visible: true, autorId: luis.id },
+      { tipo: 'skill', categoria: 'bases de datos', titulo: 'SQLBolt: SQL con ejercicios', url: 'https://sqlbolt.com/', visible: true, autorId: luis.id },
+      { tipo: 'skill', categoria: 'frontend', titulo: 'MDN: aprende desarrollo web', url: 'https://developer.mozilla.org/es/docs/Learn', visible: true, autorId: ana.id },
+      { tipo: 'skill', categoria: 'diseño', titulo: 'Laws of UX', url: 'https://lawsofux.com/', visible: true, autorId: ana.id },
+      { tipo: 'skill', categoria: 'ia', titulo: 'Curso de prompts para programar', url: 'https://www.promptingguide.ai/es', visible: false, autorId: alumnos[1].id },
+      { tipo: 'skill', categoria: 'herramientas', titulo: 'Oh My Git! (aprende git jugando)', url: 'https://ohmygit.org/', visible: true, autorId: alumnos[0].id },
     ],
   })
 
