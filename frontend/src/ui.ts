@@ -53,9 +53,11 @@ export function tapa(pegatinas: string[], { max = 99, grande = false, asignatura
     </div>`
 }
 
-/** Inicial en un círculo neutro (el color saturado es solo de las pegatinas). */
-export const avatar = (nombre: string, clase = 'size-9 text-base') =>
-  `<span aria-hidden="true" class="grid ${clase} shrink-0 place-items-center rounded-full bg-ink font-display font-extrabold text-white">${esc(nombre[0]?.toUpperCase() ?? '?')}</span>`
+/** Foto de GitHub si la hay; si no, la inicial en un círculo neutro (el color saturado es solo de las pegatinas). */
+export const avatar = (nombre: string, clase = 'size-9 text-base', url?: string | null) =>
+  url && /^https:\/\//.test(url)
+    ? `<img src="${esc(url)}" alt="" loading="lazy" class="${clase} shrink-0 rounded-full bg-ink object-cover">`
+    : `<span aria-hidden="true" class="grid ${clase} shrink-0 place-items-center rounded-full bg-ink font-display font-extrabold text-white">${esc(nombre[0]?.toUpperCase() ?? '?')}</span>`
 
 /** Muestra pequeña del color de la asignatura, para listas. */
 export const chip = (a: Asig) =>
@@ -89,6 +91,7 @@ const ICONOS = {
   check: '<path d="M20 6 9 17l-5-5"/>',
   skills: '<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/>',
   votar: '<path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/>',
+  github: '<path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/>',
   lugar: '<path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/>',
   abajo: '<path d="m6 9 6 6 6-6"/>',
 } as const

@@ -123,3 +123,19 @@ Los ficheros de instrucciones usados son `AGENTS.md` (reglas comunes) y `CLAUDE.
 - Las skills reutilizan la tabla `recursos` (`tipo = skill`, sin tema), como decía el plan, y `visible` hace de "aprobada". No hizo falta migración.
 - La clase nunca devuelve emails ni admins, y el nombre de usuario de GitHub se valida con su formato real.
 - Los avatares pasan a ser neutros, porque el documentador de diseño avisó de que usaban colores de pegatina.
+
+---
+
+## 2026-11-28 · Javier · Claude Code · Login con GitHub (OAuth2)
+
+**Prompt (resumen):** "sigue con el login de GitHub".
+
+**Resultado:** OAuth2 hecho a mano (unas 80 líneas, sin Passport ni librerías): `state` contra CSRF, intercambio del `code` en el backend, perfil y email verificado. Se reutiliza la misma sesión JWT en cookie, así que el resto de la app no cambia. Botón en login y registro, "Conectar con GitHub" en el perfil y foto de GitHub como avatar.
+
+**Decisiones de la IA que conviene destacar:**
+- Una cuenta existente solo se enlaza por email si GitHub dice que es el **principal y verificado**. Si no, cualquiera podría crear un GitHub con tu email y entrar en tu cuenta.
+- El callback se construye con `APP_URL` (el dominio del frontend), porque la petición llega reenviada por el rewrite de Vercel y el host del backend no sirve.
+- Sin claves no hay botón (`/api/auth/config`), así nadie se encuentra un botón roto en local.
+- Los tests simulan GitHub con un `fetch` falso y cubren: `state` falso, cuenta nueva, enlace solo con email verificado, conectar con sesión iniciada y sin claves.
+
+**Qué hubo que corregir:** el botón del registro decía "Entra con GitHub" porque comparaba con el título en vez de con el texto del botón.

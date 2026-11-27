@@ -223,8 +223,13 @@ Cada uno hace los tests de su bloque. Los E2E se reparten por flujo.
 - Avatares neutros: el color saturado es solo de las pegatinas (regla de DESIGN.md).
 - Tests: 29 de API y 12 E2E.
 
+**Hecho (28/11): Login con GitHub, rama `feat/github-oauth`:**
+- OAuth2 propio, sin librerías. `GET /api/auth/github` lleva a GitHub con un `state` aleatorio en una cookie (CSRF). En el callback se comprueba el `state`, el `code` se cambia por un token y se leen el perfil y el email verificado.
+- Se entra en la cuenta que ya tiene ese GitHub. Si hay sesión, se conecta GitHub a tu cuenta. Si no, se enlaza por **email verificado** o se crea una cuenta nueva de alumno, sin contraseña. Se guardan `githubUsername` y `avatarUrl` (la foto sale en el menú, la clase y los usuarios).
+- `GET /api/auth/config` dice si hay claves configuradas: sin ellas no aparece el botón. Botón "Conectar con GitHub" en tu perfil. Tests con un GitHub falso (`fetch` simulado): 5 casos.
+
 **Siguiente:**
-1. Storage en producción: crear el bucket `recursos` y las 2 variables (pasos en `despliegue.md` §7).
-2. GitHub OAuth (§7 de `despliegue.md`: hacen falta 2 OAuth Apps). Al entrar con GitHub se rellenan `githubUsername` y `avatarUrl`.
+1. Crear las 2 OAuth Apps y poner sus variables (pasos en `despliegue.md` §7).
+2. Storage en producción: crear el bucket `recursos` y las 2 variables (pasos en `despliegue.md` §7).
 3. Volver a ejecutar el seed en Supabase y hacer el PR `test` → `master`.
 4. Decidir si se hace la funcionalidad con IA (§8).

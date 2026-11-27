@@ -6,10 +6,10 @@ import type { Rol } from './generated/prisma/enums.js'
 
 /** Campos de un usuario que se pueden enviar al frontend (nunca el hash). */
 export const usuarioPublico = {
-  id: true, nombre: true, email: true, rol: true, githubUsername: true, avatarUrl: true, bio: true,
+  id: true, nombre: true, email: true, rol: true, githubId: true, githubUsername: true, avatarUrl: true, bio: true,
 } as const
 
-export type UsuarioSesion = { id: number; nombre: string; email: string; rol: Rol; githubUsername: string | null; avatarUrl: string | null; bio: string | null }
+export type UsuarioSesion = { id: number; nombre: string; email: string; rol: Rol; githubId: string | null; githubUsername: string | null; avatarUrl: string | null; bio: string | null }
 
 declare global {
   namespace Express {

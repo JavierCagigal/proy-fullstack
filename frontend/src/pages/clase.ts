@@ -5,7 +5,7 @@ import { type Params } from '../router'
 import { setUsuario, usuario, type Usuario } from '../session'
 import { avatar, cuando, icono, tapa } from '../ui'
 
-type Persona = { id: number; nombre: string; rol: 'profesor' | 'alumno'; githubUsername: string | null; bio: string | null; retos: string[]; tecnologias: string[]; asignaturas: { id: number; nombre: string }[] }
+type Persona = { id: number; nombre: string; rol: 'profesor' | 'alumno'; githubUsername: string | null; avatarUrl: string | null; bio: string | null; retos: string[]; tecnologias: string[]; asignaturas: { id: number; nombre: string }[] }
 type Perfil = Omit<Persona, 'retos' | 'tecnologias'> & {
   equipos: { nombre: string; repoUrl: string | null; demoUrl: string | null; entregadoEn: string | null; reto: { id: number; titulo: string; fin: string } }[]
   propuestas: { id: number; titulo: string; tecnologias: string[]; estado: string }[]
@@ -24,7 +24,7 @@ export async function clasePage() {
             <a href="/clase/${p.id}" class="group block">
               ${tapa([...p.retos, ...p.tecnologias], { max: 5, asignaturas: p.asignaturas })}
               <span class="mt-3 flex items-center gap-3">
-                ${avatar(p.nombre)}
+                ${avatar(p.nombre, 'size-9 text-base', p.avatarUrl)}
                 <span class="min-w-0">
                   <span class="block truncate font-semibold group-hover:underline">${esc(p.nombre)}</span>
                   <span class="block truncate text-sm text-muted">${p.githubUsername ? `@${esc(p.githubUsername)}` : p.rol}</span>
@@ -85,13 +85,17 @@ function vista(p: Perfil, esMio: boolean) {
     <div class="space-y-8">
       <a href="/clase" class="inline-flex items-center gap-1.5 text-sm font-semibold text-muted hover:text-ink"><span class="rotate-180">${icono('flecha', 'size-4')}</span>La clase</a>
       <header class="flex flex-wrap items-center gap-x-6 gap-y-4">
-        ${avatar(p.nombre, 'size-20 text-4xl')}
+        ${avatar(p.nombre, 'size-20 text-4xl', p.avatarUrl)}
         <div class="min-w-[min(100%,18rem)] flex-1">
           <h1 class="font-display text-4xl font-extrabold tracking-tight">${esc(p.nombre)}</h1>
           <p class="mt-1.5 text-lg text-muted">${p.rol === 'profesor' ? 'Profesor' : 'Alumno'}${p.githubUsername ? ` · ${github(p.githubUsername)}` : ''}</p>
           ${p.bio ? `<p class="mt-3 max-w-prose text-lg">${esc(p.bio)}</p>` : esMio ? '<p class="mt-3 text-muted">Aún no has escrito tu bio.</p>' : ''}
         </div>
-        ${esMio ? `<button data-editar class="btn btn-secundario" aria-controls="editar-perfil">${icono('editar', 'size-4')}Editar perfil</button>` : ''}
+        ${esMio ? `
+          <div class="flex flex-wrap gap-2">
+            ${usuario()!.githubId ? '' : `<a href="/api/auth/github" class="btn btn-secundario">${icono('github', 'size-4')}Conectar con GitHub</a>`}
+            <button data-editar class="btn btn-secundario" aria-controls="editar-perfil">${icono('editar', 'size-4')}Editar perfil</button>
+          </div>` : ''}
       </header>
 
       ${esMio ? `
